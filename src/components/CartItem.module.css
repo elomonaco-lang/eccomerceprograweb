@@ -1,0 +1,137 @@
+.item {
+  display: grid;
+  grid-template-columns: 90px 1fr auto auto auto;
+  gap: 1rem;
+  align-items: center;
+  background: var(--color-surface);
+  padding: 1rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.imageWrap {
+  width: 90px;
+  height: 90px;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  background: #f1f1f3;
+  flex-shrink: 0;
+}
+
+.imageWrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--color-text-muted);
+}
+
+.name {
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.name:hover {
+  color: var(--color-accent);
+}
+
+.unit {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.qty {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+}
+
+.qty button {
+  background: transparent;
+  border: none;
+  width: 32px;
+  height: 32px;
+  font-size: 1rem;
+  color: var(--color-primary);
+  transition: background 0.2s;
+}
+
+.qty button:hover {
+  background: var(--color-bg);
+}
+
+.qty span {
+  display: inline-block;
+  min-width: 30px;
+  text-align: center;
+  font-weight: 600;
+}
+
+.subtotal {
+  font-weight: 700;
+  color: var(--color-primary);
+  min-width: 90px;
+  text-align: right;
+}
+
+.remove {
+  background: transparent;
+  border: none;
+  color: var(--color-danger);
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-sm);
+  transition: background 0.2s;
+}
+
+.remove:hover {
+  background: rgba(220, 38, 38, 0.08);
+}
+
+@media (max-width: 720px) {
+  .item {
+    grid-template-columns: 80px 1fr;
+    grid-template-areas:
+      "image info"
+      "image qty"
+      "subtotal remove";
+    row-gap: 0.5rem;
+  }
+  .imageWrap {
+    grid-area: image;
+    width: 80px;
+    height: 80px;
+  }
+  .info {
+    grid-area: info;
+  }
+  .qty {
+    grid-area: qty;
+    justify-self: start;
+  }
+  .subtotal {
+    grid-area: subtotal;
+    text-align: left;
+  }
+  .remove {
+    grid-area: remove;
+    justify-self: end;
+    padding: 0.4rem 0;
+  }
+}

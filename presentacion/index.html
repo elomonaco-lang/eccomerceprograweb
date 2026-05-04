@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parcial Oral · Programación Web · Origen</title>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-2: #334155;
+      --border: #334155;
+      --text: #e2e8f0;
+      --muted: #94a3b8;
+      --primary: #f8fafc;
+      --accent: #3b82f6;
+      --accent-soft: #1e3a8a;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --html: #38bdf8;
+      --css: #f59e0b;
+      --js: #10b981;
+      --deploy: #a78bfa;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+      line-height: 1.5;
+    }
+
+    .deck {
+      position: relative;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 3rem 4rem;
+      display: none;
+      flex-direction: column;
+      overflow-y: auto;
+      animation: fade 0.3s ease;
+    }
+
+    .slide.active { display: flex; }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* HEADER */
+    .slide-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .slide-kicker {
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .slide-num {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      color: var(--primary);
+      margin-bottom: 0.5rem;
+      line-height: 1.15;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--primary);
+      margin: 1.25rem 0 0.5rem;
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      color: var(--accent);
+      margin: 0.75rem 0 0.4rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    p { margin-bottom: 0.6rem; color: var(--text); }
+
+    code {
+      font-family: "SF Mono", Menlo, Consolas, monospace;
+      background: var(--surface);
+      padding: 0.1rem 0.4rem;
+      border-radius: 4px;
+      font-size: 0.85em;
+      color: #fcd34d;
+      border: 1px solid var(--border);
+    }
+
+    pre {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      overflow-x: auto;
+      font-size: 0.82rem;
+      line-height: 1.6;
+      margin: 0.5rem 0 1rem;
+    }
+
+    pre code {
+      background: transparent;
+      border: none;
+      padding: 0;
+      color: var(--text);
+      font-size: inherit;
+    }
+
+    .muted { color: var(--muted); }
+
+    .lead {
+      font-size: 1.1rem;
+      color: var(--text);
+      max-width: 65ch;
+      margin-bottom: 1rem;
+    }
+
+    /* SLIDE 1 — PORTADA */
+    .cover {
+      justify-content: center;
+      text-align: left;
+    }
+    .cover .slide-header { display: none; }
+    .cover h1 {
+      font-size: 4rem;
+      letter-spacing: -0.02em;
+    }
+    .cover .subtitle {
+      font-size: 1.3rem;
+      color: var(--muted);
+      margin-bottom: 2rem;
+      max-width: 70ch;
+    }
+    .cover .meta {
+      display: flex;
+      gap: 2rem;
+      font-size: 0.95rem;
+      color: var(--muted);
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+    }
+    .cover .meta strong { color: var(--text); }
+
+    .stack-table {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.5rem 1.5rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.2rem 1.5rem;
+      max-width: 700px;
+      font-size: 0.95rem;
+    }
+    .stack-table .label { color: var(--muted); }
+    .stack-table .value { color: var(--text); }
+
+    .pill {
+      display: inline-block;
+      padding: 0.15rem 0.55rem;
+      border-radius: 999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    .pill-ok { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
+    .pill-pending { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+
+    /* GRID & CARDS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+    }
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+    }
+    .card h3 { margin-top: 0; }
+    .card.html h3 { color: var(--html); }
+    .card.css h3 { color: var(--css); }
+    .card.js h3 { color: var(--js); }
+    .card.deploy h3 { color: var(--deploy); }
+
+    .card ul { list-style: none; padding-left: 0; }
+    .card li {
+      padding: 0.25rem 0;
+      font-size: 0.92rem;
+      color: var(--text);
+      line-height: 1.45;
+    }
+    .card li::before {
+      content: "› ";
+      color: var(--muted);
+    }
+
+    .filepath {
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.82em;
+      color: #93c5fd;
+    }
+
+    /* TABLA props vs state */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 0.5rem 0 1rem;
+      font-size: 0.9rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 0.7rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: var(--surface-2);
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    tr:last-child td { border-bottom: none; }
+
+    /* DIAGRAMA */
+    .diagram-wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 0;
+    }
+    .mermaid {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      min-height: 0;
+    }
+    .mermaid svg {
+      width: 100% !important;
+      height: 100% !important;
+      max-width: none !important;
+      max-height: none !important;
+    }
+    .legend {
+      display: flex;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+    .legend span::before {
+      content: "■ ";
+      margin-right: 0.3rem;
+      font-size: 1.1em;
+    }
+    .legend .l-html::before { color: var(--html); }
+    .legend .l-css::before  { color: var(--css); }
+    .legend .l-js::before   { color: var(--js); }
+    .legend .l-dep::before  { color: var(--deploy); }
+
+    /* PIPELINE ascii-style */
+    .pipeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr) auto repeat(0, 0);
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.5rem;
+      margin: 1rem 0 1.5rem;
+    }
+    .pipe-step {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      position: relative;
+    }
+    .pipe-step strong {
+      display: block;
+      color: var(--primary);
+      margin-bottom: 0.25rem;
+    }
+    .pipe-step span {
+      font-size: 0.78rem;
+      color: var(--muted);
+      font-family: "SF Mono", monospace;
+    }
+    .pipe-step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      right: -0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      color: var(--accent);
+      font-size: 1.3rem;
+      font-weight: 700;
+      z-index: 2;
+    }
+
+    /* ROUTES tree */
+    .routes {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1rem 1.2rem;
+      font-family: "SF Mono", Menlo, monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      color: var(--text);
+    }
+    .routes .arrow { color: var(--muted); }
+    .routes .url { color: #93c5fd; }
+    .routes .dyn { color: var(--warning); }
+
+    /* FOOTER NAV */
+    .nav {
+      position: fixed;
+      bottom: 1rem;
+      right: 1.5rem;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      z-index: 100;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+      border-radius: 999px;
+      padding: 0.4rem 0.8rem;
+    }
+    .nav button {
+      background: transparent;
+      color: var(--text);
+      border: none;
+      font-size: 1rem;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .nav button:hover { background: var(--surface-2); }
+    .nav .indicator {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-variant-numeric: tabular-nums;
+      min-width: 40px;
+      text-align: center;
+    }
+
+    .progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent);
+      transition: width 0.3s ease;
+      z-index: 200;
+    }
+
+    .footnote {
+      margin-top: auto;
+      padding-top: 1rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      border-top: 1px dashed var(--border);
+    }
+
+    /* highlight */
+    .hl {
+      background: rgba(59, 130, 246, 0.18);
+      color: #bfdbfe;
+      padding: 0.05rem 0.3rem;
+      border-radius: 3px;
+    }
+
+    /* impresión / PDF */
+    @media print {
+      .nav, .progress { display: none; }
+      .slide {
+        position: relative;
+        display: flex !important;
+        page-break-after: always;
+        height: auto;
+        min-height: 100vh;
+      }
+      .deck { height: auto; overflow: visible; }
+      html, body { overflow: auto; }
+    }
+
+    @media (max-width: 1024px) {
+      .slide { padding: 2rem 1.5rem; }
+      .grid-2, .grid-3 { grid-template-columns: 1fr; }
+      .pipeline { grid-template-columns: 1fr; }
+      .pipe-step:not(:last-child)::after { content: "↓"; right: 50%; top: auto; bottom: -1rem; transform: translateX(50%); }
+      .cover h1 { font-size: 2.5rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="progress" id="progress"></div>
+
+  <div class="deck" id="deck">
+
+    <!-- ========== SLIDE 1 — PORTADA ========== -->
+    <section class="slide cover active">
+      <span class="slide-kicker">Parcial Oral · 71.38 Programación Web</span>
+      <h1>Origen <span style="font-size:0.55em;font-weight:400;color:var(--muted);letter-spacing:0">· cápsulas de café</span></h1>
+      <p class="subtitle">
+        <em>"Café de origen, en cada cápsula."</em><br>
+        Tienda online de cápsulas de café compatibles (tipo Nespresso). Catálogo
+        con 12 cápsulas en 4 categorías, carrito persistente, checkout validado —
+        todo en el cliente, deployable en Vercel.
+      </p>
+
+      <div class="meta">
+        <div><strong>Alumno:</strong> Estanislao Lomonaco</div>
+        <div><strong>Materia:</strong> 71.38 Programación Web</div>
+      </div>
+
+      <h3 style="margin-top:0">Stack</h3>
+      <div class="stack-table">
+        <span class="label">Framework</span>
+        <span class="value"><strong>Next.js 14</strong> · App Router</span>
+        <span class="label">Lenguaje</span>
+        <span class="value"><strong>JavaScript</strong> · ES6 modules</span>
+        <span class="label">UI</span>
+        <span class="value">React 18 · CSS Modules · HTML semántico</span>
+        <span class="label">Estado global</span>
+        <span class="value">React Context + <code>localStorage</code></span>
+        <span class="label">Datos</span>
+        <span class="value">12 cápsulas en <code>src/data/products.js</code> · 4 categorías <span class="pill pill-pending">backend pendiente</span></span>
+        <span class="label">CI / Hosting</span>
+        <span class="value">GitHub + <strong>Vercel</strong> · deploy automático</span>
+      </div>
+
+      <p class="muted" style="margin-top: 1.5rem; font-size: 0.85rem;">
+        ↓ Usá <kbd>→</kbd> / <kbd>←</kbd> o la barra inferior para navegar
+      </p>
+    </section>
+
+    <!-- ========== SLIDE 2 — DIAGRAMA ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 2 · Arquitectura</span>
+        <span class="slide-num">02 / 06</span>
+      </header>
+
+      <h1 style="font-size: 1.8rem">Diagrama de arquitectura</h1>
+
+      <div class="diagram-wrap">
+        <div class="mermaid">
+flowchart LR
+    User[Usuario] --> Browser[Navegador]
+    Browser --> Frontend
+
+    subgraph Frontend [Frontend Next.js]
+        direction LR
+        Pages[Rutas y paginas]
+        Globals[globals css]
+        Modules[CSS Modules]
+        Components[Componentes UI]
+        Context[CartContext]
+        Storage[(localStorage)]
+
+        Globals --> Pages
+        Modules --> Components
+        Pages --> Components
+        Components -->|useCart| Context
+        Context -->|sync| Storage
+        Context -.->|setState| Components
+    end
+
+    subgraph Deploy [CI CD Pipeline]
+        direction LR
+        Local[Codigo local] -->|push| GitHub[GitHub main]
+        GitHub -->|webhook| Vercel[Vercel build]
+        Vercel -->|deploy| Site[URL publica]
+    end
+
+    Site -.->|sirve| Browser
+
+    classDef est fill:#0c4a6e,stroke:#38bdf8,color:#e0f2fe
+    classDef sty fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    classDef log fill:#14532d,stroke:#10b981,color:#dcfce7
+    classDef dep fill:#4c1d95,stroke:#a78bfa,color:#ede9fe
+
+    class Layout,Pages est
+    class Globals,Modules sty
+    class Components,Context,Storage log
+    class Local,GitHub,Vercel,Site dep
+        </div>
+
+        <div class="legend">
+          <span class="l-html">Estructura (HTML)</span>
+          <span class="l-css">Estilos (CSS)</span>
+          <span class="l-js">Lógica (React/JS)</span>
+          <span class="l-dep">Deploy</span>
+        </div>
+      </div>
+
+      <p class="footnote">
+        <strong>6 elementos:</strong>
+        ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales del repo · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline <code>local → GitHub → Vercel → URL</code>
+      </p>
+    </section>
+
+    <!-- ========== SLIDE 3 — HTML/CSS/JS ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 3 · Módulo 2</span>
+        <span class="slide-num">03 / 06</span>
+      </header>
+
+      <h1>Fundamentos HTML / CSS / JS</h1>
+      <p class="lead">Cada concepto, anclado a un archivo concreto del repo.</p>
+
+      <div class="grid-2">
+        <div class="card html">
+          <h3>HTML semántico</h3>
+          <ul>
+            <li><code>&lt;header&gt;</code> + <code>&lt;nav&gt;</code> en <span class="filepath">Navbar.js</span></li>
+            <li><code>&lt;main&gt;</code> en <span class="filepath">app/layout.js:15</span></li>
+            <li><code>&lt;article&gt;</code> por producto en <span class="filepath">ProductCard.js:18</span></li>
+            <li><code>&lt;section&gt;</code> separa hero / destacados / categorías / beneficios</li>
+            <li><code>&lt;footer&gt;</code> con <code>h3/h4/ul</code> jerárquicos</li>
+          </ul>
+        </div>
+
+        <div class="card html">
+          <h3>Accesibilidad / ARIA</h3>
+          <ul>
+            <li><code>aria-label="Abrir menu"</code> + <code>aria-expanded</code> en hamburguesa</li>
+            <li><code>&lt;nav aria-label="Breadcrumb"&gt;</code> en detalle</li>
+            <li><code>aria-label</code> dinámico en cada botón "Agregar"</li>
+            <li><code>&lt;label htmlFor&gt;</code> asociado a cada input del checkout</li>
+          </ul>
+        </div>
+
+        <div class="card css">
+          <h3>Responsive · Grid + Flex</h3>
+          <ul>
+            <li>Catálogo: <strong>4 → 3 → 2 → 1</strong> col en <span class="filepath">ProductGrid.module.css</span></li>
+            <li>Carrito: <code>1fr 340px</code> → <code>1fr</code> bajo 900px</li>
+            <li>Flexbox en navbar y barra de acciones</li>
+            <li>Variables CSS en <code>:root</code> centralizan paleta</li>
+          </ul>
+        </div>
+
+        <div class="card js">
+          <h3>Eventos en JS</h3>
+          <ul>
+            <li><code>onClick</code> agregar al carrito · <span class="filepath">ProductCard.js:11</span></li>
+            <li><code>onClick</code> +/− cantidad · <span class="filepath">CartItem.js:30</span></li>
+            <li><code>onSubmit</code> + <code>preventDefault</code> · <span class="filepath">checkout/page.js:42</span></li>
+            <li><code>onChange</code> en buscador y selects de filtros</li>
+          </ul>
+        </div>
+
+        <div class="card js">
+          <h3>Validación de forms <span class="pill pill-ok">implementado</span></h3>
+          <ul>
+            <li>Manual en <span class="filepath">checkout/page.js:30-40</span></li>
+            <li>Regex email <code>/^[^\s@]+@[^\s@]+\.[^\s@]+$/</code></li>
+            <li>Teléfono ≥ 6 dígitos · nombre y dirección obligatorios</li>
+            <li>Errores en <code>useState</code> debajo de cada campo</li>
+          </ul>
+        </div>
+
+        <div class="card js">
+          <h3>Asincronía <span class="pill pill-pending">pendiente</span></h3>
+          <ul>
+            <li>Hoy: <code>import { products }</code> estático desde <span class="filepath">data/products.js</span></li>
+            <li>Decisión consciente: alcance <em>frontend sin backend</em></li>
+            <li>Reemplazo natural: <code>useEffect(() =&gt; fetch('/api/products'))</code> al sumar Supabase</li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="footnote">
+        <strong>Módulos ES6:</strong> <code>export</code> / <code>import</code> con alias <code>@/*</code> en <span class="filepath">jsconfig.json</span> · una responsabilidad por archivo
+        (<code>lib/format.js</code> formatea precios, <code>context/</code> maneja estado, <code>components/</code> presenta UI).
+      </p>
+    </section>
+
+    <!-- ========== SLIDE 4 — REACT + NEXT.JS ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 4 · Módulo 3</span>
+        <span class="slide-num">04 / 06</span>
+      </header>
+
+      <h1>React + Next.js</h1>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="color: var(--js)">Props vs State</h3>
+          <table>
+            <thead>
+              <tr><th></th><th>Props</th><th>State</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qué</strong></td>
+                <td>Datos de afuera, <em>read-only</em></td>
+                <td>Datos internos, mutables</td>
+              </tr>
+              <tr>
+                <td><strong>Ejemplo</strong></td>
+                <td><code>&lt;ProductCard product={p} /&gt;</code> en <span class="filepath">ProductGrid.js:14</span></td>
+                <td><code>const [quantity, setQuantity] = useState(1)</code> en <span class="filepath">AddToCartButton.js:10</span></td>
+              </tr>
+              <tr>
+                <td><strong>Más</strong></td>
+                <td><code>onSortChange</code>, <code>item</code>, <code>categories</code></td>
+                <td><code>items</code> en Context, <code>open</code> del menú, <code>form</code> y <code>errors</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="color: var(--js)">useEffect — uso funcional</h3>
+          <pre><code>// 1) Hidratar al montar (deps: [])
+useEffect(() =&gt; {
+  const stored = localStorage.getItem("origen_cart");
+  if (stored) setItems(JSON.parse(stored));
+  setHydrated(true);
+}, []);
+
+// 2) Persistir (deps: [items])
+useEffect(() =&gt; {
+  if (!hydrated) return;
+  localStorage.setItem("origen_cart",
+    JSON.stringify(items));
+}, [items, hydrated]);</code></pre>
+          <p class="muted" style="font-size: 0.85rem">
+            Dos efectos con dependencias distintas. El flag <code>hydrated</code> evita pisar el storage con el array vacío inicial.
+            <span class="filepath">→ context/CartContext.js:14-30</span>
+          </p>
+        </div>
+
+        <div>
+          <h3 style="color: var(--accent)">Re-render — paso a paso</h3>
+          <ol style="padding-left: 1.2rem; line-height: 1.8;">
+            <li>Click en <span class="hl">"Agregar"</span> dentro de <code>ProductCard</code></li>
+            <li><code>addItem(product)</code> ejecuta <code>setItems(...)</code> en el Context</li>
+            <li>React detecta nuevo estado → <strong>re-renderiza todos los suscriptores</strong> de <code>useCart()</code>: badge del navbar, totales, items</li>
+            <li>El <code>useEffect</code> con deps <code>[items]</code> dispara → guarda en <code>localStorage</code></li>
+          </ol>
+
+          <h3 style="color: var(--accent); margin-top: 1.2rem">Rutas en Next App Router</h3>
+          <div class="routes">
+            src/app/<br>
+            ├── page.js                <span class="arrow">→</span> <span class="url">/</span><br>
+            ├── productos/<br>
+            │   ├── page.js            <span class="arrow">→</span> <span class="url">/productos</span><br>
+            │   └── <span class="dyn">[id]</span>/page.js       <span class="arrow">→</span> <span class="url">/productos/3</span><br>
+            ├── carrito/page.js        <span class="arrow">→</span> <span class="url">/carrito</span><br>
+            ├── checkout/page.js       <span class="arrow">→</span> <span class="url">/checkout</span><br>
+            └── not-found.js           <span class="arrow">→</span> <span class="url">404</span>
+          </div>
+          <p class="muted" style="font-size: 0.85rem; margin-top: 0.5rem">
+            <code>generateStaticParams()</code> pre-renderiza las <strong>12 cápsulas</strong> en build (verificable: <code>npm run build</code> → <code>● (SSG)</code>).
+          </p>
+
+          <h3 style="color: var(--accent); margin-top: 1.2rem">Server vs Client Components</h3>
+          <table>
+            <thead>
+              <tr><th>Server (default)</th><th>Client (<code>"use client"</code>)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/layout.js</code></td>
+                <td><code>Navbar.js</code> (<code>useState</code>)</td>
+              </tr>
+              <tr>
+                <td><code>app/page.js</code></td>
+                <td><code>CartContext.js</code> (hooks + storage)</td>
+              </tr>
+              <tr>
+                <td><code>productos/[id]/page.js</code></td>
+                <td><code>AddToCartButton.js</code> (<code>onClick</code>)</td>
+              </tr>
+              <tr>
+                <td><code>productos/page.js</code> + <code>&lt;Suspense&gt;</code></td>
+                <td><code>ProductsView.js</code> (<code>useSearchParams</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========== SLIDE 5 — CI/CD ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 5 · Módulo A</span>
+        <span class="slide-num">05 / 06</span>
+      </header>
+
+      <h1>CI/CD: del commit a la URL pública</h1>
+
+      <div class="pipeline">
+        <div class="pipe-step">
+          <strong>💻 Local</strong>
+          <span>npm run dev</span>
+          <span style="display:block">npm run build</span>
+        </div>
+        <div class="pipe-step">
+          <strong>🐙 GitHub</strong>
+          <span>git push origin main</span>
+        </div>
+        <div class="pipe-step">
+          <strong>▲ Vercel</strong>
+          <span>webhook → build</span>
+          <span style="display:block">install + build</span>
+        </div>
+        <div class="pipe-step">
+          <strong>🌍 URL pública</strong>
+          <span>*.vercel.app</span>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card deploy">
+          <h3>Paso a paso</h3>
+          <ul>
+            <li><strong>Local:</strong> <code>npm run dev</code> en <code>:3000</code> · <code>lint</code> + <code>build</code> antes de pushear</li>
+            <li><strong>Repo:</strong> un único repo en GitHub, branch <code>main</code></li>
+            <li><strong>Trigger:</strong> webhook de GitHub avisa a Vercel en cada push</li>
+            <li><strong>Pipeline Vercel:</strong> detecta Next.js → <code>npm install</code> → <code>npm run build</code></li>
+            <li><strong>Si el build falla</strong> → deploy rechazado, URL anterior queda intacta</li>
+            <li><strong>Preview deploys:</strong> cada PR genera URL temporal de revisión</li>
+          </ul>
+        </div>
+
+        <div class="card deploy">
+          <h3>Variables de entorno <span class="pill pill-pending">pendiente</span></h3>
+          <p style="font-size: 0.92rem">
+            Hoy <strong>no hay backend ni servicios externos</strong>, así que no hay <code>.env</code>.
+          </p>
+          <p style="font-size: 0.92rem">
+            Cuando se sume Supabase: configurar <code>NEXT_PUBLIC_SUPABASE_URL</code> y
+            <code>SUPABASE_ANON_KEY</code> desde
+            <em>Vercel → Settings → Environment Variables</em>,
+            <strong>nunca commiteadas</strong>.
+          </p>
+
+          <h3 style="margin-top: 1rem"><code>.gitignore</code></h3>
+          <p style="font-size: 0.92rem">
+            Cubre <code>node_modules/</code>, <code>.next/</code>, <code>.env*.local</code>, <code>.vercel/</code>.
+            Nada compilado ni con secretos llega al repo.
+          </p>
+        </div>
+      </div>
+
+      <p class="footnote">
+        <strong>Verificable en vivo:</strong> <code>npm run build</code> compila en limpio · <span class="filepath">19 rutas, 12 cápsulas pre-renderizadas como SSG</span> · <code>npm run lint</code> → 0 warnings, 0 errors.
+      </p>
+    </section>
+
+    <!-- ========== SLIDE 6 — IA ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 6 · Módulo 4 · 20 pts</span>
+        <span class="slide-num">06 / 06</span>
+      </header>
+
+      <h1>Uso fundamentado de IA</h1>
+      <p class="lead">
+        Documentación completa de prompts adjunta en
+        <code>PROMPTS.md</code> (10 secciones agrupadas por feature).
+      </p>
+
+      <div class="grid-2">
+        <div class="card js">
+          <h3>Herramienta y justificación</h3>
+          <ul>
+            <li><strong>Claude Code</strong> (CLI agentic, integrado a VS Code)</li>
+            <li>Lee y escribe archivos directamente en el repo</li>
+            <li>Ejecuta <code>npm run build</code> para validar</li>
+            <li>Mantiene contexto multi-archivo → trabajo a nivel <em>feature</em>, no snippet aislado</li>
+          </ul>
+        </div>
+
+        <div class="card js">
+          <h3>Cómo validé lo generado</h3>
+          <ul>
+            <li><strong>Lectura previa:</strong> ningún archivo aceptado sin leerlo</li>
+            <li><strong>Build:</strong> <code>npm run build</code> después de cada feature</li>
+            <li><strong>Test manual:</strong> agregar / quitar / recargar / vaciar / checkout</li>
+            <li><strong>Cortar fuera de scope:</strong> Tailwind, librerías UI, TS</li>
+          </ul>
+        </div>
+
+        <div class="card" style="grid-column: 1 / -1; border-color: var(--accent)">
+          <h3 style="color: var(--accent)">Errores reales que detectó la IA</h3>
+          <table style="margin: 0">
+            <thead>
+              <tr><th>Bug</th><th>Causa</th><th>Solución</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Build estático rompía</td>
+                <td><code>useSearchParams</code> sin Suspense en SSG</td>
+                <td>Separar en <code>ProductsView</code> envuelto en <code>&lt;Suspense&gt;</code></td>
+              </tr>
+              <tr>
+                <td>Badge parpadea en "0"</td>
+                <td>Mismatch SSR vs hidratación de <code>localStorage</code></td>
+                <td>Flag <code>hydrated</code>, no renderizar hasta <code>true</code></td>
+              </tr>
+              <tr>
+                <td><code>generateStaticParams</code> falla</td>
+                <td>Next exige <code>string</code>, mandé <code>number</code></td>
+                <td><code>String(p.id)</code></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="card js" style="grid-column: 1 / -1">
+          <h3>Yo vs IA</h3>
+          <div class="grid-3" style="gap: 0.75rem; margin-top: 0.5rem">
+            <div>
+              <strong style="color: var(--success)">✓ Yo</strong>
+              <p style="font-size: 0.88rem; margin: 0.3rem 0 0">
+                Decisiones de arquitectura: Context vs Redux, mock vs fetch,
+                qué archivos llevan <code>"use client"</code>, separar <code>lib/format.js</code>.
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--accent)">⚙ IA</strong>
+              <p style="font-size: 0.88rem; margin: 0.3rem 0 0">
+                Boilerplate (CSS Modules, plumbing de props, regex de validación,
+                breakpoints, helpers de formato).
+              </p>
+            </div>
+            <div>
+              <strong style="color: var(--warning)">🔍 Verifiqué línea por línea</strong>
+              <p style="font-size: 0.88rem; margin: 0.3rem 0 0">
+                <code>CartContext</code> (los dos efectos), validación del checkout,
+                qué corre en server vs cliente.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p class="footnote">
+        <strong>Adjunto:</strong> <code>PROMPTS.md</code> con prompts representativos · setup, datos, contexto del carrito, páginas, deploy, debugging y armado de la presentación.
+      </p>
+    </section>
+
+  </div>
+
+  <!-- NAVIGATION -->
+  <div class="nav">
+    <button id="prev" aria-label="Anterior">‹</button>
+    <span class="indicator" id="indicator">1 / 6</span>
+    <button id="next" aria-label="Siguiente">›</button>
+  </div>
+
+  <script>
+    // Mermaid: render on demand para evitar layout NaN cuando el slide esta oculto.
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: "dark",
+      themeVariables: {
+        primaryColor: "#1e293b",
+        primaryTextColor: "#e2e8f0",
+        primaryBorderColor: "#475569",
+        lineColor: "#94a3b8",
+        secondaryColor: "#334155",
+        tertiaryColor: "#0f172a",
+        fontFamily: "-apple-system, BlinkMacSystemFont, sans-serif",
+        fontSize: "14px"
+      },
+      flowchart: {
+        htmlLabels: true,
+        curve: "basis",
+        padding: 20
+      }
+    });
+
+    const slides = document.querySelectorAll(".slide");
+    const total = slides.length;
+    const indicator = document.getElementById("indicator");
+    const progress = document.getElementById("progress");
+    let current = 0;
+    let mermaidRendered = false;
+
+    // Indice de la slide que contiene el diagrama Mermaid (slide 2 -> indice 1).
+    const DIAGRAM_SLIDE_INDEX = 1;
+
+    async function renderDiagramIfNeeded() {
+      if (mermaidRendered) return;
+      const target = slides[DIAGRAM_SLIDE_INDEX].querySelector(".mermaid");
+      if (!target) return;
+      // Esperamos a que el navegador pinte el slide visible para que el contenedor tenga tamano.
+      await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
+      try {
+        await mermaid.run({ nodes: [target] });
+        mermaidRendered = true;
+      } catch (e) {
+        console.warn("Mermaid render failed:", e);
+      }
+    }
+
+    function show(i) {
+      current = (i + total) % total;
+      slides.forEach((s, idx) => s.classList.toggle("active", idx === current));
+      indicator.textContent = `${current + 1} / ${total}`;
+      progress.style.width = `${((current + 1) / total) * 100}%`;
+      if (current === DIAGRAM_SLIDE_INDEX) renderDiagramIfNeeded();
+    }
+
+    document.getElementById("prev").addEventListener("click", () => show(current - 1));
+    document.getElementById("next").addEventListener("click", () => show(current + 1));
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "ArrowRight" || e.key === " " || e.key === "PageDown") {
+        e.preventDefault();
+        show(current + 1);
+      } else if (e.key === "ArrowLeft" || e.key === "PageUp") {
+        e.preventDefault();
+        show(current - 1);
+      } else if (e.key === "Home") show(0);
+      else if (e.key === "End") show(total - 1);
+      else if (/^[1-6]$/.test(e.key)) show(parseInt(e.key, 10) - 1);
+    });
+
+    show(0);
+  </script>
+</body>
+</html>
