@@ -279,7 +279,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 10px;
-      padding: 1rem 1.5rem;
+      padding: 0.5rem 0.75rem;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -622,15 +622,15 @@
     </section>
 
     <!-- ========== SLIDE 3 — DIAGRAMA ========== -->
-    <section class="slide">
-      <header class="slide-header">
+    <section class="slide" style="padding: 2rem 2.5rem;">
+      <header class="slide-header" style="padding-bottom: 0.5rem; margin-bottom: 0.75rem;">
         <span class="slide-kicker">Slide 3 · Arquitectura</span>
         <span class="slide-num">03 / 07</span>
       </header>
 
-      <h1 style="font-size: 1.8rem">Diagrama de arquitectura</h1>
+      <h1 style="font-size: 1.3rem; margin-bottom: 0.4rem;">Diagrama de arquitectura</h1>
 
-      <div class="diagram-wrap">
+      <div class="diagram-wrap" style="gap: 0.5rem;">
         <div class="mermaid">
 flowchart LR
     User[Usuario] --> Browser[Navegador]
@@ -673,7 +673,7 @@ flowchart LR
     class Local,GitHub,Vercel,Site dep
         </div>
 
-        <div class="legend">
+        <div class="legend" style="font-size: 0.78rem; gap: 1rem;">
           <span class="l-html">Estructura (HTML)</span>
           <span class="l-css">Estilos (CSS)</span>
           <span class="l-js">Lógica (React/JS)</span>
@@ -681,9 +681,9 @@ flowchart LR
         </div>
       </div>
 
-      <p class="footnote">
+      <p class="footnote" style="font-size: 0.7rem; margin-top: 0.5rem; padding-top: 0.5rem;">
         <strong>6 elementos:</strong>
-        ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales del repo · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline <code>local → GitHub → Vercel → URL</code>
+        ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline deploy
       </p>
     </section>
 
@@ -754,109 +754,84 @@ flowchart LR
         <span class="slide-num">05 / 07</span>
       </header>
 
-      <h1>React + Next.js</h1>
+      <h1 style="font-size: 1.6rem; margin-bottom: 0.6rem;">React + Next.js</h1>
 
-      <div class="grid-2">
-        <div>
-          <h3 style="color: var(--js)">Props vs State</h3>
-          <table>
-            <thead>
-              <tr><th></th><th>Props</th><th>State</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Qué</strong></td>
-                <td>Datos de afuera, <em>read-only</em></td>
-                <td>Datos internos, mutables</td>
-              </tr>
-              <tr>
-                <td><strong>Ejemplo</strong></td>
-                <td><code>&lt;ProductCard product={p} /&gt;</code> en <span class="filepath">ProductGrid.js:14</span></td>
-                <td><code>const [quantity, setQuantity] = useState(1)</code> en <span class="filepath">AddToCartButton.js:10</span></td>
-              </tr>
-              <tr>
-                <td><strong>Más</strong></td>
-                <td><code>onSortChange</code>, <code>item</code>, <code>categories</code></td>
-                <td><code>items</code> en Context, <code>open</code> del menú, <code>form</code> y <code>errors</code></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3 style="color: var(--js)">useEffect</h3>
-          <p style="font-size: 0.92rem; margin-bottom: 0.5rem;">
-            <strong>Es un hook que ejecuta código DESPUÉS de que el componente se renderiza.</strong>
-            El array al final controla cuándo se vuelve a ejecutar:
-            <code>[]</code> = una sola vez al montar · <code>[items]</code> = cada vez que <code>items</code> cambia.
+      <div class="grid-2" style="gap: 1rem;">
+        <div class="card js">
+          <h3>🧩 Componente</h3>
+          <p style="font-size: 0.92rem; margin: 0;">
+            Función JS que devuelve <strong>JSX</strong>. Cada parte de la UI es un componente:
+            <code>ProductCard</code>, <code>Navbar</code>, <code>CartItem</code>, <code>ProductGrid</code>.
+            Son reutilizables e independientes entre sí — el mismo <code>ProductCard</code> aparece
+            en home, catálogo y productos relacionados.
           </p>
-          <p style="font-size: 0.88rem; margin-bottom: 0.6rem; color: var(--muted);">
-            En mi <code>CartContext</code> tengo dos: <strong>uno LEE</strong> el carrito de localStorage al cargar la página, <strong>otro ESCRIBE</strong> cada vez que el carrito cambia.
-          </p>
-          <pre style="font-size: 0.78rem; padding: 0.7rem 0.9rem; margin: 0;"><code>// 1) LEER al montar
-useEffect(() =&gt; {
-  const stored = localStorage.getItem("origen_cart");
-  if (stored) setItems(JSON.parse(stored));
-  setHydrated(true);
-}, []);
-
-// 2) ESCRIBIR cuando cambia items
-useEffect(() =&gt; {
-  if (!hydrated) return;
-  localStorage.setItem("origen_cart",
-    JSON.stringify(items));
-}, [items, hydrated]);</code></pre>
         </div>
 
-        <div>
-          <h3 style="color: var(--accent)">Re-render — paso a paso</h3>
-          <ol style="padding-left: 1.2rem; line-height: 1.8;">
-            <li>Click en <span class="hl">"Agregar"</span> dentro de <code>ProductCard</code></li>
-            <li><code>addItem(product)</code> ejecuta <code>setItems(...)</code> en el Context</li>
-            <li>React detecta nuevo estado → <strong>re-renderiza todos los suscriptores</strong> de <code>useCart()</code>: badge del navbar, totales, items</li>
-            <li>El <code>useEffect</code> con deps <code>[items]</code> dispara → guarda en <code>localStorage</code></li>
-          </ol>
+        <div class="card js">
+          <h3>📨 Props</h3>
+          <p style="font-size: 0.92rem; margin: 0;">
+            Datos que el componente <strong>padre pasa al hijo</strong>. Ejemplo:
+            <code>&lt;ProductCard product={item}/&gt;</code>. Son de <strong>solo lectura</strong> dentro
+            del componente que las recibe — el hijo no puede modificarlas, solo usarlas para renderizar.
+          </p>
+        </div>
 
-          <h3 style="color: var(--accent); margin-top: 1.2rem">Rutas en Next App Router</h3>
-          <div class="routes">
-            src/app/<br>
-            ├── page.js                <span class="arrow">→</span> <span class="url">/</span><br>
-            ├── productos/<br>
-            │   ├── page.js            <span class="arrow">→</span> <span class="url">/productos</span><br>
-            │   └── <span class="dyn">[id]</span>/page.js       <span class="arrow">→</span> <span class="url">/productos/3</span><br>
-            ├── carrito/page.js        <span class="arrow">→</span> <span class="url">/carrito</span><br>
-            ├── checkout/page.js       <span class="arrow">→</span> <span class="url">/checkout</span><br>
-            └── not-found.js           <span class="arrow">→</span> <span class="url">404</span>
-          </div>
-          <p style="font-size: 0.85rem; margin-top: 0.5rem;">
-            <strong>SSG con <code>generateStaticParams()</code>:</strong> en build time Next genera una HTML estática por cada uno de los 12 productos. Las páginas no se calculan en cada visita — ya están listas en CDN.
-            <span class="filepath" style="display:block;margin-top:0.2rem">npm run build → ● (SSG) en las 12 rutas</span>
+        <div class="card js">
+          <h3>🔄 State (useState)</h3>
+          <p style="font-size: 0.92rem; margin: 0;">
+            Datos que <strong>cambian y disparan re-render</strong>. En Origen lo uso para:
+            la cantidad en <code>AddToCartButton</code>, los <code>items</code> del carrito en
+            <code>CartContext</code>, el <code>open</code> del menú móvil en el <code>Navbar</code>,
+            y los <code>errors</code> del formulario de checkout.
           </p>
+        </div>
 
-          <h3 style="color: var(--accent); margin-top: 1.2rem">Server vs Client Components</h3>
-          <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">
-            Por <strong>default todo es Server</strong> (más rápido, menos JS al cliente). Marco con <code>"use client"</code> solo lo que necesita estado, hooks o eventos.
+        <div class="card js">
+          <h3>⚡ useEffect</h3>
+          <p style="font-size: 0.92rem; margin: 0;">
+            Se ejecuta <strong>después de renderizar</strong>. En Origen <strong>sincroniza el carrito con
+            <code>localStorage</code></strong>: un efecto LEE al montar el componente, otro ESCRIBE cada
+            vez que <code>items</code> cambia. Eso es lo que mantiene el carrito persistido entre sesiones.
           </p>
-          <table style="font-size: 0.82rem">
-            <thead>
-              <tr><th>Server (default)</th><th>Client (<code>"use client"</code>)</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>app/layout.js</code></td>
-                <td><code>Navbar.js</code> (<code>useState</code>)</td>
-              </tr>
-              <tr>
-                <td><code>productos/[id]/page.js</code></td>
-                <td><code>AddToCartButton.js</code> (<code>onClick</code>)</td>
-              </tr>
-              <tr>
-                <td><code>productos/page.js</code> + <code>&lt;Suspense&gt;</code></td>
-                <td><code>ProductsView.js</code> (<code>useSearchParams</code>)</td>
-              </tr>
-            </tbody>
-          </table>
-          <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem;">
-            <strong><code>&lt;Suspense&gt;</code></strong> = componente de React que muestra un fallback ("Cargando...") mientras un hijo está esperando. Lo necesito porque <code>useSearchParams</code> no funciona en build time (no hay URL todavía) — Suspense le permite a Next "esperar al cliente".
+        </div>
+
+        <div class="card js" style="grid-column: 1 / -1;">
+          <h3>🗺️ Rutas en Next.js</h3>
+          <p style="font-size: 0.92rem; margin: 0 0 0.4rem;">
+            Cada carpeta dentro de <code>/app/</code> es una ruta automática.
+            <code>/app/productos/page.js</code> → <code>/productos</code>.
+            Las rutas dinámicas usan corchetes: <code>/app/productos/[id]/page.js</code> → <code>/productos/3</code>.
           </p>
+          <p style="font-size: 0.85rem; margin: 0; color: var(--muted);">
+            <strong>SSG con <code>generateStaticParams()</code>:</strong> Next pre-genera las 12 páginas
+            de productos en build time — no se calculan en cada visita, ya están listas en CDN.
+            Verificable con <code>npm run build</code>: aparecen marcadas como <code>● (SSG)</code>.
+          </p>
+        </div>
+      </div>
+
+      <h3 style="color: var(--accent); margin-top: 1rem; margin-bottom: 0.5rem; font-size: 0.95rem;">Server vs Client Components</h3>
+      <div class="grid-2" style="gap: 1rem;">
+        <div class="card" style="border-left: 3px solid var(--js);">
+          <h3 style="color: var(--js); font-size: 0.9rem;">🖥️ Server Components <span style="font-weight: 400; color: var(--muted); font-size: 0.75rem;">(default)</span></h3>
+          <p style="font-size: 0.85rem; margin: 0 0 0.4rem;">
+            Se renderizan <strong>en el servidor</strong> y mandan HTML al cliente. Más rápidos, menos JS al navegador. <strong>No</strong> pueden usar <code>useState</code>, <code>useEffect</code> ni eventos.
+          </p>
+          <ul style="font-size: 0.82rem; margin: 0; padding-left: 1rem;">
+            <li><code>app/layout.js</code> — solo estructura HTML</li>
+            <li><code>app/productos/[id]/page.js</code> — se prerenderiza por SSG</li>
+          </ul>
+        </div>
+
+        <div class="card" style="border-left: 3px solid var(--accent);">
+          <h3 style="color: var(--accent); font-size: 0.9rem;">💻 Client Components <span style="font-weight: 400; color: var(--muted); font-size: 0.75rem;">("use client")</span></h3>
+          <p style="font-size: 0.85rem; margin: 0 0 0.4rem;">
+            Se hidratan <strong>en el navegador</strong>. Llevan <code>"use client"</code> arriba del archivo. Pueden usar hooks, eventos y APIs del browser (<code>localStorage</code>).
+          </p>
+          <ul style="font-size: 0.82rem; margin: 0; padding-left: 1rem;">
+            <li><code>Navbar.js</code> — usa <code>useState</code> para el menú móvil</li>
+            <li><code>CartContext.js</code> — usa hooks + <code>localStorage</code></li>
+          </ul>
         </div>
       </div>
     </section>
@@ -905,21 +880,16 @@ useEffect(() =&gt; {
         </div>
 
         <div class="card deploy">
-          <h3>Variables de entorno <span class="pill pill-pending">pendiente</span></h3>
-          <p style="font-size: 0.92rem">
-            Hoy <strong>no hay backend ni servicios externos</strong>, así que no hay <code>.env</code>.
-          </p>
-          <p style="font-size: 0.92rem">
-            Cuando se sume Supabase: configurar <code>NEXT_PUBLIC_SUPABASE_URL</code> y
-            <code>SUPABASE_ANON_KEY</code> desde
-            <em>Vercel → Settings → Environment Variables</em>,
-            <strong>nunca commiteadas</strong>.
-          </p>
-
-          <h3 style="margin-top: 1rem"><code>.gitignore</code></h3>
-          <p style="font-size: 0.92rem">
-            Cubre <code>node_modules/</code>, <code>.next/</code>, <code>.env*.local</code>, <code>.vercel/</code>.
-            Nada compilado ni con secretos llega al repo.
+          <h3>Qué hace Vercel exactamente</h3>
+          <ul>
+            <li><strong>Detecta el framework</strong>: ve <code>next.config.mjs</code>, configura el build sin que yo toque nada.</li>
+            <li><strong>Instala dependencias</strong>: corre <code>npm install</code> usando el <code>package-lock.json</code>.</li>
+            <li><strong>Buildea</strong>: <code>npm run build</code> genera HTML estático para las 19 rutas.</li>
+            <li><strong>Sube al CDN</strong>: distribuye los assets en nodos globales (Argentina servida desde nodo cercano).</li>
+            <li><strong>Rollback automático</strong>: si el deploy nuevo falla, queda la URL del deploy anterior.</li>
+          </ul>
+          <p style="font-size: 0.85rem; margin-top: 0.6rem; color: var(--muted);">
+            <strong><code>.gitignore</code></strong> excluye <code>node_modules/</code>, <code>.next/</code> y <code>.vercel/</code> — solo subo código fuente, no nada compilado.
           </p>
         </div>
       </div>
