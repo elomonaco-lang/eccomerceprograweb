@@ -9,10 +9,10 @@
 | Slide | Tema | Tiempo |
 |---|---|---|
 | 1 | Portada | 0:00 → 1:00 |
-| 2 | Diagrama de arquitectura | 1:00 → 3:00 |
-| 3 | HTML / CSS / JS | 3:00 → 5:00 |
-| 4 | React + Next.js | 5:00 → 7:30 |
-| 5 | Recorrido por la app (screenshots) | 7:30 → 8:30 |
+| 2 | Recorrido por la app (screenshots) | 1:00 → 2:00 |
+| 3 | HTML / CSS / JS | 2:00 → 4:00 |
+| 4 | React + Next.js | 4:00 → 6:30 |
+| 5 | Diagrama de arquitectura | 6:30 → 8:30 |
 | 6 | CI/CD | 8:30 → 9:00 |
 | 7 | Uso fundamentado de IA | 9:00 → 10:00 |
 
@@ -28,39 +28,32 @@
 >
 > Quiero ser claro desde el principio con el alcance: **el proyecto cubre frontend completo. La capa de datos hoy son 12 instrumentos mockeados en `src/data/products.js`. El backend con Supabase, la autenticación y la pasarela de pagos son la próxima iteración** — preferí entregar un frontend sólido y deployable antes que medio backend a medias.
 >
-> **Vamos al diagrama.**
+> **Antes de la teoría, paso a mostrarles el producto funcionando.**
 
-**Tip de transición:** señalá la tabla de stack al decir cada tecnología, y al pasar a la slide 2 decí *"vamos al diagrama"* — funciona como gancho.
-
----
-
-## ⏱ Slide 2 — Diagrama de arquitectura (≈ 2 min · 1:00 → 3:00)
-
-> **Esta es la slide más importante porque resume cómo se conectan todas las piezas del proyecto.**
->
-> Arriba a la izquierda están **el usuario y el navegador** — es el punto de entrada. Cuando el usuario entra al sitio, el navegador pide a Vercel los assets de la app de Next.js.
->
-> El frontend está organizado en tres capas que diferencié con colores en el diagrama:
->
-> **En azul, la estructura — HTML semántico:** el `layout.js` raíz envuelve toda la app con `<html>`, `<body>` y `<main>`, y dentro viven las páginas, que son las cinco rutas reales del repo: la home, `/productos`, `/productos/[id]` que es dinámica, `/carrito` y `/checkout`.
->
-> **En amarillo, los estilos — CSS:** tengo un `globals.css` con variables CSS en `:root` que definen la paleta y un puñado de clases utilitarias, y después cada componente tiene su propio CSS Module con scope local — así no hay colisiones entre estilos.
->
-> **En verde, la lógica — React y JavaScript:** los componentes reutilizables (`Navbar`, `ProductCard`, `ProductGrid`, `ProductFilters`, `CartItem`, `Footer`), el `CartContext` que es el estado global, y `localStorage` que es donde persiste el carrito.
->
-> **El flujo de información, siguiendo las flechas:** una página renderiza componentes, los componentes consumen el contexto vía `useCart()`, y el contexto sincroniza con localStorage en ambas direcciones.
->
-> **La flecha punteada de Context hacia Components es clave:** representa que cuando llamo a `setState` dentro del contexto, React re-renderiza automáticamente todos los componentes que están suscritos. Cuando agrego un producto, el badge del navbar y los totales del carrito se actualizan en el mismo ciclo.
->
-> **Y abajo, en violeta, está el pipeline de deploy:** código local → `git push` a GitHub → un webhook le avisa a Vercel → Vercel corre `npm run build` → si el build pasa, queda online en una URL `*.vercel.app` — en mi caso, las 12 páginas de instrumentos se prerenderizan estáticamente. Esa URL es la que sirve los assets al navegador del usuario.
->
-> **Con esto tengo cubiertos los seis elementos que pide el diagrama: usuario y navegador, separación HTML/CSS/JS, componentes y rutas reales del repo, flechas de flujo, re-render por state, y pipeline de deploy de punta a punta.**
-
-**Tip de transición:** este es el momento de no apurarse. Si el profe pregunta algo del diagrama, respondé acá. Después: *"Voy a abrir cada capa con ejemplos del código real."*
+**Tip de transición:** señalá la tabla de stack al decir cada tecnología, y al pasar a la slide 2 mostrá la pantalla con un *"así se ve"* — engancha más que arrancar con teoría.
 
 ---
 
-## ⏱ Slide 3 — Fundamentos HTML / CSS / JS (≈ 2 min · 3:00 → 5:00)
+## ⏱ Slide 2 — Recorrido por la app (≈ 1 min · 1:00 → 2:00)
+
+> **Antes de entrar a la teoría, quiero mostrarles qué construí. Mejor empezar viendo el producto que escuchar definiciones de memoria.**
+>
+> Acá tienen capturas del recorrido completo del usuario:
+>
+> - **Home** — hero "Donde nace tu sonido", instrumentos destacados, categorías y los cuatro beneficios.
+> - **Catálogo** — la grilla responsive con el buscador, el filtro por categoría y el ordenamiento por precio. Si tipeo "Strato" me filtra al instante porque es estado local de React, no recarga la página.
+> - **Detalle** — cada uno de los doce instrumentos tiene su URL propia, prerenderizada estáticamente en build time. La sección "Productos relacionados" usa el helper `getRelatedProducts()` que filtra por misma categoría.
+> - **Carrito** — con productos cargados, el resumen actualiza en tiempo real, y si recargo la página los items siguen ahí gracias a `localStorage`.
+>
+> **Si quieren probarlo en vivo, está deployado en Vercel** — incluyendo el checkout que valida el formulario y emite un número de orden.
+>
+> **Ahora voy a abrir cada capa que hay debajo de estas pantallas.**
+
+**Tip:** si tenés la URL de Vercel abierta en otra pestaña, podés saltar a hacer una demo de 30 segundos al final de esta slide. Esa es la "evidencia viva" que vale más que cualquier captura.
+
+---
+
+## ⏱ Slide 3 — Fundamentos HTML / CSS / JS (≈ 2 min · 2:00 → 4:00)
 
 > **Acá bajo cada concepto del módulo 2 a un archivo concreto del repo, así podemos verificarlo en vivo si querés.**
 >
@@ -82,7 +75,7 @@
 
 ---
 
-## ⏱ Slide 4 — React + Next.js (≈ 2:30 min · 5:00 → 7:30)
+## ⏱ Slide 4 — React + Next.js (≈ 2:30 min · 4:00 → 6:30)
 
 > **Esta es la parte más densa. Voy a ir por cuatro conceptos: props vs state, useEffect, re-render y server vs client components.**
 >
@@ -104,22 +97,29 @@
 
 ---
 
-## ⏱ Slide 5 — Recorrido por la app (≈ 1 min · 7:30 → 8:30)
+## ⏱ Slide 5 — Diagrama de arquitectura (≈ 2 min · 6:30 → 8:30)
 
-> **Antes de pasar al deploy, quiero mostrar el producto funcionando — porque la mejor demostración es verlo en vivo.**
+> **Vimos las pantallas, vimos el HTML/CSS, vimos el modelo de React/Next. Ahora todo eso se conecta en una sola vista. Esta slide es la que vale 12 puntos del rúbrica.**
 >
-> Acá tienen capturas del recorrido completo del usuario:
+> Arriba a la izquierda están **el usuario y el navegador** — el punto de entrada. Cuando el usuario entra al sitio, el navegador pide a Vercel los assets de la app de Next.js.
 >
-> - **Home** — hero, instrumentos destacados, categorías y los cuatro beneficios.
-> - **Catálogo** — la grilla responsive con el buscador, el filtro por categoría y el ordenamiento por precio. Si tipeo "Strato" me filtra al instante porque es estado local de React, no recarga la página.
-> - **Detalle** — cada uno de los doce instrumentos tiene su URL propia, prerenderizada estáticamente en build time. La sección "Productos relacionados" usa el helper `getRelatedProducts()` que filtra por misma categoría.
-> - **Carrito** — con productos cargados, el resumen actualiza en tiempo real, y si recargás la página los items siguen ahí gracias a `localStorage`.
+> El frontend está organizado en tres capas, que las diferencié con colores en el diagrama:
 >
-> **Si tienen acceso al deploy, pueden probar todo el flujo en vivo, incluyendo el checkout que valida el formulario y emite un número de orden.**
+> **En azul, la estructura — HTML semántico:** el `layout.js` raíz envuelve toda la app con `<html>`, `<body>` y `<main>`, y dentro viven las páginas, que son las cinco rutas reales del repo: la home, `/productos`, `/productos/[id]` que es dinámica, `/carrito` y `/checkout`.
+>
+> **En amarillo, los estilos — CSS:** un `globals.css` con variables en `:root` y clases utilitarias, más cada componente con su CSS Module de scope local — así no hay colisiones.
+>
+> **En verde, la lógica — React y JavaScript:** los componentes reutilizables (`Navbar`, `ProductCard`, `ProductGrid`, etc.), el `CartContext` que es el estado global, y `localStorage` donde persiste el carrito.
+>
+> **Siguiendo las flechas:** una página renderiza componentes, los componentes consumen el contexto vía `useCart()`, y el contexto sincroniza con localStorage.
+>
+> **La flecha punteada de Context hacia Components es clave** — representa el `setState → re-render` que les expliqué hace dos minutos. Cuando hago click en agregar, esa flecha se dispara y actualiza el badge del navbar y los totales del carrito en el mismo ciclo.
+>
+> **Y abajo, en violeta, el pipeline de deploy:** código local → `git push` → GitHub → webhook → Vercel buildea → URL pública. Eso lo vamos a ver con más detalle en la próxima slide.
+>
+> **Con esto tengo cubiertos los seis elementos que pide el diagrama: usuario y navegador, separación HTML/CSS/JS, componentes y rutas reales del repo, flechas de flujo, re-render por state, y pipeline de deploy de punta a punta.**
 
-**Tip:** si tenés la URL de Vercel, abrila en el navegador antes del oral y mostrala como demo después de esta slide. Esa es la "evidencia viva" que cierra mejor que cualquier captura.
-
-> **Vamos al pipeline de deploy.**
+**Tip de transición:** acá es donde podés cerrar diciendo *"el pipeline lo abrimos en la próxima"*. Si el profe quiere preguntar algo del diagrama, respondé y avanzá.
 
 ---
 

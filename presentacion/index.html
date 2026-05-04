@@ -549,69 +549,76 @@
       </p>
     </section>
 
-    <!-- ========== SLIDE 2 — DIAGRAMA ========== -->
+    <!-- ========== SLIDE 2 — RECORRIDO POR LA APP ========== -->
     <section class="slide">
       <header class="slide-header">
-        <span class="slide-kicker">Slide 2 · Arquitectura</span>
+        <span class="slide-kicker">Slide 2 · Producto en vivo</span>
         <span class="slide-num">02 / 07</span>
       </header>
 
-      <h1 style="font-size: 1.8rem">Diagrama de arquitectura</h1>
+      <h1>Recorrido por la app</h1>
+      <p class="lead">El usuario explora, agrega al carrito, completa el checkout. Todo funcionando en producción.</p>
 
-      <div class="diagram-wrap">
-        <div class="mermaid">
-flowchart LR
-    User[Usuario] --> Browser[Navegador]
-    Browser --> Frontend
-
-    subgraph Frontend [Frontend Next.js]
-        direction LR
-        Pages[Rutas y paginas]
-        Globals[globals css]
-        Modules[CSS Modules]
-        Components[Componentes UI]
-        Context[CartContext]
-        Storage[(localStorage)]
-
-        Globals --> Pages
-        Modules --> Components
-        Pages --> Components
-        Components -->|useCart| Context
-        Context -->|sync| Storage
-        Context -.->|setState| Components
-    end
-
-    subgraph Deploy [CI CD Pipeline]
-        direction LR
-        Local[Codigo local] -->|push| GitHub[GitHub main]
-        GitHub -->|webhook| Vercel[Vercel build]
-        Vercel -->|deploy| Site[URL publica]
-    end
-
-    Site -.->|sirve| Browser
-
-    classDef est fill:#0c4a6e,stroke:#38bdf8,color:#e0f2fe
-    classDef sty fill:#78350f,stroke:#f59e0b,color:#fef3c7
-    classDef log fill:#14532d,stroke:#10b981,color:#dcfce7
-    classDef dep fill:#4c1d95,stroke:#a78bfa,color:#ede9fe
-
-    class Layout,Pages est
-    class Globals,Modules sty
-    class Components,Context,Storage log
-    class Local,GitHub,Vercel,Site dep
+      <div class="screens">
+        <div class="screen">
+          <div class="screen-img">
+            <img src="screenshots/home.png" alt="Home de Origen" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="placeholder" style="display:none">
+              📸 <code>screenshots/home.png</code><br>
+              <span style="opacity:0.7">Hero + instrumentos destacados + categorías</span>
+            </div>
+          </div>
+          <div class="screen-caption">
+            <span class="tag">Home</span>
+            <span>Hero, destacados, categorías y beneficios</span>
+          </div>
         </div>
 
-        <div class="legend">
-          <span class="l-html">Estructura (HTML)</span>
-          <span class="l-css">Estilos (CSS)</span>
-          <span class="l-js">Lógica (React/JS)</span>
-          <span class="l-dep">Deploy</span>
+        <div class="screen">
+          <div class="screen-img">
+            <img src="screenshots/catalogo.png" alt="Catálogo con filtros" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="placeholder" style="display:none">
+              📸 <code>screenshots/catalogo.png</code><br>
+              <span style="opacity:0.7">Grilla de instrumentos + buscador + filtros + orden</span>
+            </div>
+          </div>
+          <div class="screen-caption">
+            <span class="tag">Catálogo</span>
+            <span>Buscador, filtro por categoría, orden por precio/nombre</span>
+          </div>
+        </div>
+
+        <div class="screen">
+          <div class="screen-img">
+            <img src="screenshots/detalle.png" alt="Detalle de producto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="placeholder" style="display:none">
+              📸 <code>screenshots/detalle.png</code><br>
+              <span style="opacity:0.7">Detalle SSG + selector cantidad + relacionados</span>
+            </div>
+          </div>
+          <div class="screen-caption">
+            <span class="tag">Detalle</span>
+            <span>SSG (<code>generateStaticParams</code>) + productos relacionados</span>
+          </div>
+        </div>
+
+        <div class="screen">
+          <div class="screen-img">
+            <img src="screenshots/carrito.png" alt="Carrito y checkout" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <div class="placeholder" style="display:none">
+              📸 <code>screenshots/carrito.png</code><br>
+              <span style="opacity:0.7">Carrito persistido en localStorage o checkout confirmado</span>
+            </div>
+          </div>
+          <div class="screen-caption">
+            <span class="tag">Carrito</span>
+            <span>Persistido en <code>localStorage</code> · checkout validado</span>
+          </div>
         </div>
       </div>
 
       <p class="footnote">
-        <strong>6 elementos:</strong>
-        ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales del repo · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline <code>local → GitHub → Vercel → URL</code>
+        <strong>Demo en vivo disponible:</strong> <code>npm run dev</code> en local · o la URL de Vercel si está deployado. La navegación entre rutas no recarga la página (cliente).
       </p>
     </section>
 
@@ -800,76 +807,69 @@ useEffect(() =&gt; {
       </div>
     </section>
 
-    <!-- ========== SLIDE 5 — RECORRIDO POR LA APP ========== -->
+    <!-- ========== SLIDE 5 — DIAGRAMA ========== -->
     <section class="slide">
       <header class="slide-header">
-        <span class="slide-kicker">Slide 5 · Producto en vivo</span>
+        <span class="slide-kicker">Slide 5 · Arquitectura</span>
         <span class="slide-num">05 / 07</span>
       </header>
 
-      <h1>Recorrido por la app</h1>
-      <p class="lead">El usuario explora, agrega al carrito, completa el checkout. Todo funcionando en producción.</p>
+      <h1 style="font-size: 1.8rem">Diagrama de arquitectura</h1>
 
-      <div class="screens">
-        <div class="screen">
-          <div class="screen-img">
-            <img src="screenshots/home.png" alt="Home de Origen" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div class="placeholder" style="display:none">
-              📸 <code>screenshots/home.png</code><br>
-              <span style="opacity:0.7">Hero + instrumentos destacados + categorías</span>
-            </div>
-          </div>
-          <div class="screen-caption">
-            <span class="tag">Home</span>
-            <span>Hero, destacados, categorías y beneficios</span>
-          </div>
+      <div class="diagram-wrap">
+        <div class="mermaid">
+flowchart LR
+    User[Usuario] --> Browser[Navegador]
+    Browser --> Frontend
+
+    subgraph Frontend [Frontend Next.js]
+        direction LR
+        Pages[Rutas y paginas]
+        Globals[globals css]
+        Modules[CSS Modules]
+        Components[Componentes UI]
+        Context[CartContext]
+        Storage[(localStorage)]
+
+        Globals --> Pages
+        Modules --> Components
+        Pages --> Components
+        Components -->|useCart| Context
+        Context -->|sync| Storage
+        Context -.->|setState| Components
+    end
+
+    subgraph Deploy [CI CD Pipeline]
+        direction LR
+        Local[Codigo local] -->|push| GitHub[GitHub main]
+        GitHub -->|webhook| Vercel[Vercel build]
+        Vercel -->|deploy| Site[URL publica]
+    end
+
+    Site -.->|sirve| Browser
+
+    classDef est fill:#0c4a6e,stroke:#38bdf8,color:#e0f2fe
+    classDef sty fill:#78350f,stroke:#f59e0b,color:#fef3c7
+    classDef log fill:#14532d,stroke:#10b981,color:#dcfce7
+    classDef dep fill:#4c1d95,stroke:#a78bfa,color:#ede9fe
+
+    class Layout,Pages est
+    class Globals,Modules sty
+    class Components,Context,Storage log
+    class Local,GitHub,Vercel,Site dep
         </div>
 
-        <div class="screen">
-          <div class="screen-img">
-            <img src="screenshots/catalogo.png" alt="Catálogo con filtros" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div class="placeholder" style="display:none">
-              📸 <code>screenshots/catalogo.png</code><br>
-              <span style="opacity:0.7">Grilla de instrumentos + buscador + filtros + orden</span>
-            </div>
-          </div>
-          <div class="screen-caption">
-            <span class="tag">Catálogo</span>
-            <span>Buscador, filtro por categoría, orden por precio/nombre</span>
-          </div>
-        </div>
-
-        <div class="screen">
-          <div class="screen-img">
-            <img src="screenshots/detalle.png" alt="Detalle de producto" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div class="placeholder" style="display:none">
-              📸 <code>screenshots/detalle.png</code><br>
-              <span style="opacity:0.7">Detalle SSG + selector cantidad + relacionados</span>
-            </div>
-          </div>
-          <div class="screen-caption">
-            <span class="tag">Detalle</span>
-            <span>SSG (<code>generateStaticParams</code>) + productos relacionados</span>
-          </div>
-        </div>
-
-        <div class="screen">
-          <div class="screen-img">
-            <img src="screenshots/carrito.png" alt="Carrito y checkout" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
-            <div class="placeholder" style="display:none">
-              📸 <code>screenshots/carrito.png</code><br>
-              <span style="opacity:0.7">Carrito persistido en localStorage o checkout confirmado</span>
-            </div>
-          </div>
-          <div class="screen-caption">
-            <span class="tag">Carrito</span>
-            <span>Persistido en <code>localStorage</code> · checkout validado</span>
-          </div>
+        <div class="legend">
+          <span class="l-html">Estructura (HTML)</span>
+          <span class="l-css">Estilos (CSS)</span>
+          <span class="l-js">Lógica (React/JS)</span>
+          <span class="l-dep">Deploy</span>
         </div>
       </div>
 
       <p class="footnote">
-        <strong>Demo en vivo disponible:</strong> <code>npm run dev</code> en local · o la URL de Vercel si está deployado. La navegación entre rutas no recarga la página (cliente).
+        <strong>6 elementos:</strong>
+        ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales del repo · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline <code>local → GitHub → Vercel → URL</code>
       </p>
     </section>
 
@@ -1072,8 +1072,8 @@ useEffect(() =&gt; {
     let current = 0;
     let mermaidRendered = false;
 
-    // Indice de la slide que contiene el diagrama Mermaid (slide 2 -> indice 1).
-    const DIAGRAM_SLIDE_INDEX = 1;
+    // Indice de la slide que contiene el diagrama Mermaid (slide 5 -> indice 4).
+    const DIAGRAM_SLIDE_INDEX = 4;
 
     async function renderDiagramIfNeeded() {
       if (mermaidRendered) return;
