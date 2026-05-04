@@ -1,136 +1,94 @@
-# MusicTrack — Instrumentos musicales
+# MusicTrack — Monorepo
 
 > **Donde nace tu sonido.**
+>
+> E-commerce de instrumentos musicales (guitarras eléctricas, acústicas, bajos y accesorios) — proyecto académico para la materia **71.38 Programación Web**.
 
-Frontend de un e-commerce de instrumentos musicales (guitarras eléctricas, acústicas, bajos y accesorios) desarrollado con **Next.js** como proyecto académico para la materia **Programación Web**. Sitio totalmente funcional del lado del cliente, sin backend ni base de datos: los productos están mockeados localmente y el carrito se persiste en `localStorage`.
-
-> El catálogo, la marca y los estilos son fácilmente personalizables (ver sección "Cómo personalizar").
-
-## Stack
-
-- **Next.js 14** (App Router)
-- **React 18**
-- **JavaScript** (sin TypeScript)
-- **CSS Modules** + CSS global con paleta basada en variables
-- **HTML semántico** y diseño **responsive**
-- Sin backend, sin base de datos, sin autenticación, sin pagos reales
-
-## Estructura del proyecto
+## Estructura
 
 ```
 .
-├── src/
-│   ├── app/                 # Rutas (App Router)
-│   │   ├── layout.js        # Layout raíz con Navbar y Footer
-│   │   ├── page.js          # Home
-│   │   ├── productos/       # Listado y detalle de instrumentos
-│   │   ├── carrito/         # Vista del carrito
-│   │   └── checkout/        # Checkout simple
-│   ├── components/          # Componentes reutilizables
-│   ├── context/             # CartContext (estado global)
-│   ├── data/                # Catálogo mockeado
-│   └── lib/                 # Helpers (formato de precio, etc.)
-├── presentacion/            # Slides HTML del parcial
-├── public/
-├── next.config.mjs
-├── jsconfig.json
-└── package.json
+├── frontend/        # Next.js 14 + React 18 + CSS Modules
+├── backend/         # Schema Supabase: migraciones SQL + seed
+├── presentacion/    # Slides HTML del oral
+├── README.md        # Este archivo
+├── PRESENTACION.md  # Versión texto de las slides
+├── PITCH.md         # Guion oral de 10 min
+├── GUION.md         # Guion literal slide por slide
+├── PROMPTS.md       # Documentación de prompts de IA (anexo módulo 4)
+└── EXPLICACION_SLIDES.md  # Glosario detallado de cada término
 ```
 
-## Catálogo
+## Quick start
 
-12 instrumentos distribuidos en 4 categorías:
+### Frontend
 
-- **Eléctricas** — Stratocaster Vintage Sunburst, Les Paul Standard Cherry, Telecaster Butterscotch, SG Special Cherry
-- **Acústicas** — Acústica Folk Dreadnought, Clásica de Concierto Nylon, Electroacústica Jumbo
-- **Bajos** — Jazz Bass 4 Cuerdas, Precision Bass Active
-- **Accesorios** — Amplificador 30W Combo, Pedal de Distorsión Vintage, Set de Cuerdas Acero
+```bash
+cd frontend
+npm install
+cp .env.example .env.local   # opcional: completar con creds de Supabase
+npm run dev                  # http://localhost:3000
+```
+
+Sin `.env.local` configurado, la app usa los **12 productos mock** de `frontend/src/data/products.js` como fallback. Apenas completes las env vars de Supabase, las páginas leen de la base real.
+
+### Backend (Supabase)
+
+1. Crear proyecto en [supabase.com](https://supabase.com).
+2. SQL Editor → ejecutar [backend/supabase/migrations/001_init.sql](backend/supabase/migrations/001_init.sql) (4 tablas + RLS).
+3. SQL Editor → ejecutar [backend/supabase/seed.sql](backend/supabase/seed.sql) (12 instrumentos).
+4. Settings → API → copiar `Project URL` y `anon public key`.
+5. Pegar en `frontend/.env.local`.
+
+Detalle completo: [backend/README.md](backend/README.md).
+
+## Stack
+
+| Capa | Tecnología |
+|---|---|
+| Framework | **Next.js 14** · App Router |
+| Lenguaje | **JavaScript** ES6 modules |
+| UI | React 18 · CSS Modules · HTML semántico |
+| Estado global | React Context + `localStorage` |
+| Backend | **Supabase** (PostgreSQL + RLS) |
+| CI / Hosting | GitHub + **Vercel** |
 
 ## Funcionalidades
 
-- Home con hero, instrumentos destacados, categorías y beneficios.
-- Catálogo con grilla responsive, **buscador** por nombre, **filtro** por categoría y **ordenamiento** por precio o nombre.
-- Página de detalle dinámica para cada instrumento (`/productos/[id]`) con productos relacionados.
-- Carrito global con React Context, persistido en `localStorage` bajo la key `musictrack_cart`.
-  - Agregar / quitar / aumentar / disminuir cantidad / vaciar carrito.
-  - Contador de productos en la Navbar.
-- Checkout simple con formulario validado (nombre, email, teléfono, dirección, comentarios) y mensaje de confirmación con número de orden `MT-XXXXXX`.
-- Diseño responsive para desktop, tablet y mobile.
+- Home con hero, instrumentos destacados, categorías, beneficios.
+- Catálogo con búsqueda, filtro por categoría, ordenamiento.
+- Detalle dinámico (`/productos/[id]`) **prerenderizado en build (SSG)**.
+- Carrito persistido en `localStorage` bajo la key `musictrack_cart`.
+- Checkout con validación → **POST a `/api/orders`** que inserta en Supabase.
+- Order ID humano: `MT-XXXXXX`.
 
-## Cómo correrlo
+## Deploy
 
-### 1. Instalar dependencias
+### Vercel (frontend)
 
-```bash
-npm install
-```
+1. Importar el repo en Vercel.
+2. **Root Directory: `frontend`** (importante en monorepo).
+3. Agregar las env vars (`NEXT_PUBLIC_SUPABASE_URL` y `NEXT_PUBLIC_SUPABASE_ANON_KEY`) en *Settings → Environment Variables*.
+4. Deploy.
 
-### 2. Levantar el entorno de desarrollo
+URL pública actual: [musictrack.vercel.app](https://musictrack.vercel.app).
 
-```bash
-npm run dev
-```
+### Backend
 
-Abrir [http://localhost:3000](http://localhost:3000).
+Supabase es totalmente gestionado: el "deploy" es ejecutar las migraciones y el seed desde el SQL Editor. No requiere infraestructura propia.
 
-### 3. Build de producción
+## Próximos pasos (módulos siguientes)
 
-```bash
-npm run build
-npm start
-```
+- **S11 · Auth**: Supabase Auth + completar `profiles` con trigger.
+- **S12 · Admin panel**: rutas server-only para gestionar productos y órdenes.
+- **S13–S15 · Mercado Pago**: checkout real + webhook que actualiza `orders.status`.
 
-### 4. Lint
+## Materiales del oral
 
-```bash
-npm run lint
-```
-
-## Cómo subirlo a GitHub
-
-```bash
-git init
-git add .
-git commit -m "MusicTrack — instrumentos musicales"
-git branch -M main
-git remote add origin https://github.com/<TU-USUARIO>/<NOMBRE-DEL-REPO>.git
-git push -u origin main
-```
-
-## Cómo deployarlo en Vercel
-
-1. Entrar a [https://vercel.com](https://vercel.com) e iniciar sesión con GitHub.
-2. Click en **Add New… → Project** y elegir el repositorio.
-3. Vercel detecta automáticamente que es Next.js. Dejar las opciones por defecto.
-4. Click en **Deploy**.
-
-Cada `git push` a `main` genera un nuevo deploy automáticamente.
-
-## Cómo personalizar
-
-- **Catálogo:** editar [src/data/products.js](src/data/products.js) — cambiar nombres, precios, descripciones, categorías, stock o imágenes. Las imágenes pueden ser URLs públicas (Unsplash) o archivos locales en `public/`.
-- **Marca / nombre:**
-  - [src/components/Navbar.js](src/components/Navbar.js) — texto del brand y emoji/logo.
-  - [src/components/Footer.js](src/components/Footer.js) — descripción.
-  - [src/app/layout.js](src/app/layout.js) — title y description SEO.
-  - [src/app/page.js](src/app/page.js) — hero y bloque de beneficios.
-- **Paleta de colores:** centralizada como variables CSS en [src/app/globals.css](src/app/globals.css) (`:root`). Cambiando 4 variables (`--color-primary`, `--color-accent`, `--color-bg`, `--color-text`) se rebrandea toda la UI.
-
-## Materiales del parcial
-
-- [PRESENTACION.md](PRESENTACION.md) — versión texto de las slides.
 - [presentacion/index.html](presentacion/index.html) — slides interactivas.
-- [PITCH.md](PITCH.md) — guion oral de 10 minutos.
-- [PROMPTS.md](PROMPTS.md) — documentación de prompts de IA (anexo obligatorio).
-
-## Qué falta / próximos pasos sugeridos
-
-- Backend real (Next.js API Routes o Supabase) y base de datos de productos.
-- Autenticación de usuarios y historial de pedidos.
-- Pasarela de pagos (Mercado Pago, Stripe).
-- Reviews y rating de productos.
-- Panel de administración para gestionar el catálogo.
-- Tests automatizados.
+- [PITCH.md](PITCH.md) / [GUION.md](GUION.md) — guion del oral.
+- [PROMPTS.md](PROMPTS.md) — anexo de prompts de IA.
+- [EXPLICACION_SLIDES.md](EXPLICACION_SLIDES.md) — glosario.
 
 ## Licencia
 

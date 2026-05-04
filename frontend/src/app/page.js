@@ -1,7 +1,7 @@
 import Link from "next/link";
 import ProductGrid from "@/components/ProductGrid";
 import ProductImage from "@/components/ProductImage";
-import { products, categories } from "@/data/products";
+import { findAllProducts, findAllCategories } from "@/lib/db/products";
 import styles from "./page.module.css";
 
 // Imagen representativa por categoria — usamos un producto de cada una.
@@ -12,8 +12,11 @@ const categoryVisuals = {
   Accesorios: { image: "/products/amplificador.jpg", icon: "🔊" },
 };
 
-export default function HomePage() {
-  // Tomamos los primeros 4 productos como destacados.
+export default async function HomePage() {
+  // Server Component: leemos productos y categorias desde la capa de datos
+  // (Supabase si esta configurado, mock como fallback).
+  const products = await findAllProducts();
+  const categories = await findAllCategories();
   const featured = products.slice(0, 4);
 
   const benefits = [

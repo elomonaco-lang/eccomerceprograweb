@@ -4,9 +4,8 @@ import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import ProductGrid from "@/components/ProductGrid";
 import ProductFilters from "@/components/ProductFilters";
-import { products, categories } from "@/data/products";
 
-export default function ProductsView() {
+export default function ProductsView({ products = [], categories = [] }) {
   const searchParams = useSearchParams();
   const initialCategory = searchParams.get("categoria") || "";
 
@@ -47,7 +46,7 @@ export default function ProductsView() {
     }
 
     return list;
-  }, [category, search, sort]);
+  }, [products, category, search, sort]);
 
   return (
     <>

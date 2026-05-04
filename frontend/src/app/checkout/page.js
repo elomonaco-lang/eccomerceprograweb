@@ -19,6 +19,8 @@ export default function CheckoutPage() {
   const [form, setForm] = useState(initialForm);
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState("");
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -42,23 +44,58 @@ export default function CheckoutPage() {
     return e;
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const newErrors = validate();
     setErrors(newErrors);
     if (Object.keys(newErrors).length > 0) return;
 
-    // Generamos un numero de orden aleatorio simulado.
-    const orderId = `MT-${Date.now().toString().slice(-6)}`;
-    setConfirmed({
-      id: orderId,
-      name: form.name,
-      email: form.email,
-      total: totalPrice,
-      items: totalItems,
-    });
-    clearCart();
-    setForm(initialForm);
+    setSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const response = await fetch("/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          customer: {
+            name: form.name,
+            email: form.email,
+            phone: form.phone,
+            address: form.address,
+            comments: form.comments,
+          },
+          items: items.map((it) => ({
+            id: it.id,
+            name: it.name,
+            price: it.price,
+            quantity: it.quantity,
+          })),
+          total: totalPrice,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json().catch(() => ({}));
+        throw new Error(data.error || "No se pudo procesar la orden.");
+      }
+
+      const { orderId } = await response.json();
+
+      setConfirmed({
+        id: orderId,
+        name: form.name,
+        email: form.email,
+        total: totalPrice,
+        items: totalItems,
+      });
+      clearCart();
+      setForm(initialForm);
+    } catch (err) {
+      setSubmitError(err.message || "Error al confirmar la orden.");
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   if (!hydrated) {
@@ -211,12 +248,19 @@ export default function CheckoutPage() {
             />
           </div>
 
+          {submitError && (
+            <p className={styles.error} role="alert">
+              {submitError}
+            </p>
+          )}
+
           <button
             type="submit"
             className="btn btn-accent btn-block"
             style={{ marginTop: "0.5rem" }}
+            disabled={submitting}
           >
-            Confirmar pedido
+            {submitting ? "Procesando..." : "Confirmar pedido"}
           </button>
         </form>
 

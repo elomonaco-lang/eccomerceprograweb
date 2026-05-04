@@ -1,0 +1,11 @@
+{
+  "name": "musictrack-backend",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend de MusicTrack: schema Supabase, migraciones y seed.",
+  "scripts": {
+    "db:print:init": "cat supabase/migrations/001_init.sql",
+    "db:print:seed": "cat supabase/seed.sql",
+    "db:apply:psql": "psql \"$DATABASE_URL\" -f supabase/migrations/001_init.sql && psql \"$DATABASE_URL\" -f supabase/seed.sql"
+  }
+}

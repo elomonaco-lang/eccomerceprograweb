@@ -1,23 +1,24 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import {
-  getProductById,
-  getRelatedProducts,
-  products,
-} from "@/data/products";
+  findProductById,
+  findRelatedProducts,
+  findAllProductIds,
+} from "@/lib/db/products";
 import ProductGrid from "@/components/ProductGrid";
 import ProductImage from "@/components/ProductImage";
 import AddToCartButton from "./AddToCartButton";
 import { formatPrice } from "@/lib/format";
 import styles from "./page.module.css";
 
-// Generamos las paginas estaticamente para todos los productos.
-export function generateStaticParams() {
-  return products.map((p) => ({ id: String(p.id) }));
+// SSG: generamos una página estática por cada producto en build time.
+export async function generateStaticParams() {
+  const ids = await findAllProductIds();
+  return ids.map((id) => ({ id }));
 }
 
-export function generateMetadata({ params }) {
-  const product = getProductById(params.id);
+export async function generateMetadata({ params }) {
+  const product = await findProductById(params.id);
   if (!product) return { title: "Producto no encontrado" };
   return {
     title: `${product.name} | MusicTrack`,
@@ -25,14 +26,14 @@ export function generateMetadata({ params }) {
   };
 }
 
-export default function ProductDetailPage({ params }) {
-  const product = getProductById(params.id);
+export default async function ProductDetailPage({ params }) {
+  const product = await findProductById(params.id);
 
   if (!product) {
     notFound();
   }
 
-  const related = getRelatedProducts(product.id, product.category, 4);
+  const related = await findRelatedProducts(product.id, product.category, 4);
 
   return (
     <div className="container">
