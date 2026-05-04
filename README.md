@@ -1,4 +1,4 @@
-# Origen — Instrumentos musicales
+# MusicTrack — Instrumentos musicales
 
 > **Donde nace tu sonido.**
 
@@ -51,10 +51,10 @@ Frontend de un e-commerce de instrumentos musicales (guitarras eléctricas, acú
 - Home con hero, instrumentos destacados, categorías y beneficios.
 - Catálogo con grilla responsive, **buscador** por nombre, **filtro** por categoría y **ordenamiento** por precio o nombre.
 - Página de detalle dinámica para cada instrumento (`/productos/[id]`) con productos relacionados.
-- Carrito global con React Context, persistido en `localStorage` bajo la key `origen_cart`.
+- Carrito global con React Context, persistido en `localStorage` bajo la key `musictrack_cart`.
   - Agregar / quitar / aumentar / disminuir cantidad / vaciar carrito.
   - Contador de productos en la Navbar.
-- Checkout simple con formulario validado (nombre, email, teléfono, dirección, comentarios) y mensaje de confirmación con número de orden `ORG-XXXXXX`.
+- Checkout simple con formulario validado (nombre, email, teléfono, dirección, comentarios) y mensaje de confirmación con número de orden `MT-XXXXXX`.
 - Diseño responsive para desktop, tablet y mobile.
 
 ## Cómo correrlo
@@ -91,7 +91,7 @@ npm run lint
 ```bash
 git init
 git add .
-git commit -m "Origen — instrumentos musicales"
+git commit -m "MusicTrack — instrumentos musicales"
 git branch -M main
 git remote add origin https://github.com/<TU-USUARIO>/<NOMBRE-DEL-REPO>.git
 git push -u origin main

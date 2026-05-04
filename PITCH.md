@@ -20,9 +20,9 @@
 
 ## ⏱ Slide 1 — Portada (≈ 1 min · 0:00 → 1:00)
 
-> **Buenos días / tardes. Soy Estanislao Lomonaco y vengo a presentar Origen, un e-commerce de instrumentos musicales que armé como proyecto integrador para esta materia.**
+> **Buenos días / tardes. Soy Estanislao Lomonaco y vengo a presentar MusicTrack, un e-commerce de instrumentos musicales que armé como proyecto integrador para esta materia.**
 >
-> En una frase: **Origen permite a un usuario explorar un catálogo de instrumentos — guitarras eléctricas, acústicas, bajos y accesorios —, filtrarlos por categoría, buscarlos por nombre, agregarlos a un carrito que se persiste en el navegador, y completar un checkout simulado con validación de formulario y confirmación de orden.** El tagline es *"Donde nace tu sonido"*.
+> En una frase: **MusicTrack permite a un usuario explorar un catálogo de instrumentos — guitarras eléctricas, acústicas, bajos y accesorios —, filtrarlos por categoría, buscarlos por nombre, agregarlos a un carrito que se persiste en el navegador, y completar un checkout simulado con validación de formulario y confirmación de orden.** El tagline es *"Donde nace tu sonido"*.
 >
 > El stack es **Next.js 14 con App Router, JavaScript puro — sin TypeScript —, React 18 para los componentes interactivos, CSS Modules para los estilos, React Context con localStorage para el estado global del carrito, y deploy automático en Vercel a partir de un repositorio en GitHub.**
 >
@@ -212,7 +212,7 @@
 ## 🎬 Apertura y cierre — versión corta para memorizar
 
 **Apertura (15 seg):**
-> "Buenos días. Soy Estanislao Lomonaco. Vengo a presentar **Origen**, un e-commerce de **instrumentos musicales** — guitarras, bajos y accesorios — hecho con **Next.js 14, JavaScript, CSS Modules, deployado en Vercel desde GitHub**. Frontend completo con catálogo, carrito persistente y checkout. Backend pendiente como decisión consciente de alcance. Vamos al diagrama."
+> "Buenos días. Soy Estanislao Lomonaco. Vengo a presentar **MusicTrack**, un e-commerce de **instrumentos musicales** — guitarras, bajos y accesorios — hecho con **Next.js 14, JavaScript, CSS Modules, deployado en Vercel desde GitHub**. Frontend completo con catálogo, carrito persistente y checkout. Backend pendiente como decisión consciente de alcance. Vamos al diagrama."
 
 **Cierre (15 seg):**
 > "Las decisiones de arquitectura las tomé yo — Context, mock data, qué corre en server vs cliente. La IA aceleró el boilerplate, pero los efectos críticos los verifiqué línea por línea. Adjunto `PROMPTS.md` con la documentación. Gracias."

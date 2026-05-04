@@ -1,4 +1,4 @@
-# Glosario detallado de las slides — Origen
+# Glosario detallado de las slides — MusicTrack
 
 > Este archivo explica cada término, concepto y referencia que aparece en las 7 slides. Pensado para que puedas **defender en el oral cualquier cosa que diga la pantalla**, sin que te agarren con un "¿qué quisiste decir con X?".
 >
@@ -12,7 +12,7 @@
 ## 📄 Slide 1 — Portada
 
 ### Qué dice
-- Título: **Origen · instrumentos musicales**
+- Título: **MusicTrack · instrumentos musicales**
 - Subtítulo: *"Donde nace tu sonido."* + descripción del producto
 - Tabla de stack con 6 filas:
   - Framework: Next.js 14 · App Router
@@ -60,7 +60,7 @@
 
 #### localStorage
 - API del navegador para **guardar pares clave-valor que persisten incluso si cerrás la pestaña**.
-- Mi carrito vive en `localStorage` bajo la key `origen_cart`. Si cerrás el navegador y volvés mañana, el carrito sigue ahí.
+- Mi carrito vive en `localStorage` bajo la key `musictrack_cart`. Si cerrás el navegador y volvés mañana, el carrito sigue ahí.
 - Limitaciones: solo strings (uso `JSON.stringify`/`JSON.parse`), ~5MB max, accesible solo desde el mismo dominio.
 
 #### GitHub + Vercel
@@ -117,7 +117,7 @@ Footnote: *"Demo en vivo: `npm run dev` en local · o la URL de Vercel."*
 
 #### Demo en vivo
 - `npm run dev` = comando para correr la app localmente en `http://localhost:3000`.
-- URL de Vercel = `https://origen-six.vercel.app` (o similar). Ahí está deployado.
+- URL de Vercel = `https://musictrack.vercel.app` (o similar). Ahí está deployado.
 
 ### Cómo defender
 - *"¿Las screenshots son del producto real?"* → "Sí, son capturas de la app andando. La URL de Vercel está activa, podemos verlo en vivo si querés."
@@ -252,7 +252,7 @@ Footnote: **Módulos ES6** con `import`/`export` y alias `@/*`.
 ```js
 // 1) Hidratar al montar (deps: [])
 useEffect(() => {
-  const stored = localStorage.getItem("origen_cart");
+  const stored = localStorage.getItem("musictrack_cart");
   if (stored) setItems(JSON.parse(stored));
   setHydrated(true);
 }, []);
@@ -260,7 +260,7 @@ useEffect(() => {
 // 2) Persistir (deps: [items])
 useEffect(() => {
   if (!hydrated) return;
-  localStorage.setItem("origen_cart", JSON.stringify(items));
+  localStorage.setItem("musictrack_cart", JSON.stringify(items));
 }, [items, hydrated]);
 ```
 Caption: dos efectos con dependencias distintas. Flag `hydrated` evita pisar storage con array vacío.
@@ -449,7 +449,7 @@ Footnote: 6 elementos requeridos:
 
 #### Storage (localStorage)
 - API del navegador donde se persiste el carrito.
-- Key: `origen_cart`. Valor: JSON del array de items.
+- Key: `musictrack_cart`. Valor: JSON del array de items.
 
 #### Flecha `useCart`
 - Va de Components a Context. Significa: los componentes consumen el Context vía el hook `useCart()`.
@@ -470,7 +470,7 @@ Footnote: 6 elementos requeridos:
 - El servicio de Vercel que recibe el código y lo buildea.
 
 #### Site (URL pública)
-- La URL final donde está deployada la app: `origen-six.vercel.app`.
+- La URL final donde está deployada la app: `musictrack.vercel.app`.
 
 #### Flecha `push`
 - Local → GitHub. Significa: hago `git push` y el código viaja al repo remoto.

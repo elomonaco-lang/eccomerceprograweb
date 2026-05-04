@@ -4,14 +4,14 @@
 
 ---
 
-## Slide 1 — Origen
+## Slide 1 — MusicTrack
 
 ### ¿Qué es?
-**Origen** es una tienda online de **instrumentos musicales** — guitarras eléctricas, acústicas, bajos y accesorios. Permite a un usuario **explorar el catálogo, filtrarlo por categoría, buscar por nombre, agregar instrumentos a un carrito persistente y completar un checkout simulado**.
+**MusicTrack** es una tienda online de **instrumentos musicales** — guitarras eléctricas, acústicas, bajos y accesorios. Permite a un usuario **explorar el catálogo, filtrarlo por categoría, buscar por nombre, agregar instrumentos a un carrito persistente y completar un checkout simulado**.
 
 Tagline: *"Donde nace tu sonido."*
 
-Todo el flujo de compra funciona en el cliente: el carrito sobrevive al recargar la página gracias a `localStorage`, y el checkout valida el formulario y emite un número de orden `ORG-XXXXXX`.
+Todo el flujo de compra funciona en el cliente: el carrito sobrevive al recargar la página gracias a `localStorage`, y el checkout valida el formulario y emite un número de orden `MT-XXXXXX`.
 
 ### Stack
 | Capa | Tecnología |
@@ -51,7 +51,7 @@ flowchart TB
         subgraph Logica["Lógica · React + JS"]
             Components["Componentes<br/>Navbar · ProductCard · ProductGrid<br/>ProductFilters · CartItem · Footer"]
             Context["CartContext<br/>useState + useEffect"]
-            Storage[("localStorage<br/>origen_cart")]
+            Storage[("localStorage<br/>musictrack_cart")]
         end
 
         Layout --> Pages
@@ -161,7 +161,7 @@ En [CartContext.js:14-30](src/context/CartContext.js) hay **dos efectos** comple
 ```js
 // 1) Hidratar el carrito al montar (corre una sola vez)
 useEffect(() => {
-  const stored = window.localStorage.getItem("origen_cart");
+  const stored = window.localStorage.getItem("musictrack_cart");
   if (stored) setItems(JSON.parse(stored));
   setHydrated(true);
 }, []);
@@ -169,7 +169,7 @@ useEffect(() => {
 // 2) Persistir cada cambio (corre cuando items cambia)
 useEffect(() => {
   if (!hydrated) return;
-  window.localStorage.setItem("origen_cart", JSON.stringify(items));
+  window.localStorage.setItem("musictrack_cart", JSON.stringify(items));
 }, [items, hydrated]);
 ```
 

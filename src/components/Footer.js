@@ -8,7 +8,7 @@ export default function Footer() {
     <footer className={styles.footer}>
       <div className={`container ${styles.grid}`}>
         <div>
-          <h3 className={styles.title}>Origen</h3>
+          <h3 className={styles.title}>MusicTrack</h3>
           <p className={styles.text}>
             Instrumentos musicales: guitarras electricas, acusticas, bajos y
             accesorios. Marcas seleccionadas, asesoramiento y envio a todo el

@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import ProductsView from "./ProductsView";
 
 export const metadata = {
-  title: "Instrumentos | Origen",
+  title: "Instrumentos | MusicTrack",
 };
 
 export default function ProductsPage() {

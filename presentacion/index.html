@@ -3,26 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Parcial Oral · Programación Web · Origen</title>
+  <title>Parcial Oral · Programación Web · MusicTrack</title>
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
   <style>
     :root {
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --surface-2: #334155;
-      --border: #334155;
-      --text: #e2e8f0;
-      --muted: #94a3b8;
-      --primary: #f8fafc;
-      --accent: #3b82f6;
-      --accent-soft: #1e3a8a;
-      --success: #10b981;
-      --warning: #f59e0b;
-      --danger: #ef4444;
-      --html: #38bdf8;
-      --css: #f59e0b;
-      --js: #10b981;
-      --deploy: #a78bfa;
+      /* Paleta MusicTrack — espressos, cremas y ámbar (matchea el e-commerce) */
+      --bg: #faf6f0;
+      --surface: #ffffff;
+      --surface-2: #f3ebe0;
+      --border: #e8dfd3;
+      --text: #2c1810;
+      --muted: #8a7d6e;
+      --primary: #3e2723;
+      --accent: #b87333;
+      --accent-soft: #f5e6d3;
+      --success: #6b8e4e;
+      --warning: #d97706;
+      --danger: #b54343;
+      /* Acentos por capa — todos en familia cálida, baja saturación */
+      --html: #5d4037;
+      --css: #b87333;
+      --js: #3e2723;
+      --deploy: #8b5a2b;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -109,11 +111,11 @@
 
     code {
       font-family: "SF Mono", Menlo, Consolas, monospace;
-      background: var(--surface);
+      background: var(--surface-2);
       padding: 0.1rem 0.4rem;
       border-radius: 4px;
       font-size: 0.85em;
-      color: #fcd34d;
+      color: var(--accent);
       border: 1px solid var(--border);
     }
 
@@ -194,8 +196,8 @@
       letter-spacing: 0.04em;
       text-transform: uppercase;
     }
-    .pill-ok { background: rgba(16, 185, 129, 0.15); color: #6ee7b7; }
-    .pill-pending { background: rgba(245, 158, 11, 0.15); color: #fcd34d; }
+    .pill-ok { background: rgba(107, 142, 78, 0.18); color: #4d6635; }
+    .pill-pending { background: rgba(217, 119, 6, 0.15); color: #8b5a2b; }
 
     /* GRID & CARDS */
     .grid-2 {
@@ -385,11 +387,12 @@
       gap: 0.5rem;
       align-items: center;
       z-index: 100;
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(255, 255, 255, 0.92);
       backdrop-filter: blur(8px);
       border: 1px solid var(--border);
       border-radius: 999px;
       padding: 0.4rem 0.8rem;
+      box-shadow: 0 4px 14px rgba(62, 39, 35, 0.10);
     }
     .nav button {
       background: transparent;
@@ -431,8 +434,8 @@
 
     /* highlight */
     .hl {
-      background: rgba(59, 130, 246, 0.18);
-      color: #bfdbfe;
+      background: rgba(184, 115, 51, 0.18);
+      color: var(--primary);
       padding: 0.05rem 0.3rem;
       border-radius: 3px;
     }
@@ -457,7 +460,7 @@
     }
     .screen-img {
       flex: 1;
-      background: #0b1424;
+      background: var(--surface-2);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -529,7 +532,7 @@
     <!-- ========== SLIDE 1 — PORTADA ========== -->
     <section class="slide cover active">
       <span class="slide-kicker">Parcial Oral · 71.38 Programación Web</span>
-      <h1>Origen <span style="font-size:0.55em;font-weight:400;color:var(--muted);letter-spacing:0">· instrumentos musicales</span></h1>
+      <h1>MusicTrack <span style="font-size:0.55em;font-weight:400;color:var(--muted);letter-spacing:0">· instrumentos musicales</span></h1>
       <p class="subtitle">
         <em>"Donde nace tu sonido."</em><br>
         Tienda online de instrumentos musicales: guitarras eléctricas, acústicas,
@@ -575,7 +578,7 @@
       <div class="screens">
         <div class="screen">
           <div class="screen-img">
-            <img src="screenshots/home.png" alt="Home de Origen" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+            <img src="screenshots/home.png" alt="Home de MusicTrack" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
             <div class="placeholder" style="display:none">
               📸 <code>screenshots/home.png</code><br>
               <span style="opacity:0.7">Hero + instrumentos destacados + categorías</span>
@@ -647,143 +650,135 @@
       <div class="arch-svg-wrap">
         <svg viewBox="0 0 960 520" preserveAspectRatio="xMidYMid meet" xmlns="http://www.w3.org/2000/svg" class="arch-svg">
           <defs>
-            <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.35"/></filter>
-            <linearGradient id="entradaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#1e2538" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
-            </linearGradient>
-            <linearGradient id="appGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#2a1810" stop-opacity="0.7"/>
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
-            </linearGradient>
-            <linearGradient id="deployGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#172033" stop-opacity="0.6"/>
-              <stop offset="100%" stop-color="#0f172a" stop-opacity="0"/>
+            <filter id="sh"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#3e2723" flood-opacity="0.12"/></filter>
+            <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#f3ebe0" stop-opacity="0.6"/>
+              <stop offset="100%" stop-color="#faf6f0" stop-opacity="0"/>
             </linearGradient>
             <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
-              <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#8a7d6e"/>
             </marker>
           </defs>
 
-          <rect width="960" height="520" fill="#0f172a" rx="12"/>
+          <rect width="960" height="520" fill="#faf6f0" rx="12"/>
 
           <!-- Title -->
-          <text x="480" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#b87333" font-family="Georgia, serif">Origen — Arquitectura</text>
-          <text x="480" y="44" text-anchor="middle" font-size="9" fill="#94a3b8" font-family="sans-serif">Frontend Next.js · Stack en capas · CI/CD continuo</text>
+          <text x="480" y="28" text-anchor="middle" font-size="16" font-weight="700" fill="#3e2723" font-family="Georgia, serif">MusicTrack — Arquitectura</text>
+          <text x="480" y="44" text-anchor="middle" font-size="9" fill="#8a7d6e" font-family="sans-serif">Frontend Next.js · Stack en capas · CI/CD continuo</text>
 
           <!-- ============= PANEL 1: ENTRADA ============= -->
-          <rect x="30" y="62" width="240" height="395" rx="12" fill="url(#entradaGrad)" stroke="#334155" stroke-width="1"/>
-          <text x="150" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#fbbf24" letter-spacing="2" font-family="sans-serif">ENTRADA</text>
+          <rect x="30" y="62" width="240" height="395" rx="12" fill="url(#panelGrad)" stroke="#e8dfd3" stroke-width="1"/>
+          <text x="150" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#b87333" letter-spacing="2" font-family="sans-serif">ENTRADA</text>
 
           <!-- Usuario -->
-          <rect x="85" y="100" width="130" height="48" rx="24" fill="#1e293b" stroke="#fbbf24" stroke-width="1.5" filter="url(#sh)"/>
+          <rect x="85" y="100" width="130" height="48" rx="24" fill="#ffffff" stroke="#b87333" stroke-width="1.5" filter="url(#sh)"/>
           <text x="150" y="122" text-anchor="middle" font-size="16">👤</text>
-          <text x="150" y="140" text-anchor="middle" font-size="10" fill="#fde68a" font-weight="600" font-family="sans-serif">Usuario</text>
+          <text x="150" y="140" text-anchor="middle" font-size="10" fill="#3e2723" font-weight="600" font-family="sans-serif">Usuario</text>
 
-          <line x1="150" y1="152" x2="150" y2="178" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="150" y1="152" x2="150" y2="178" stroke="#c9beb1" stroke-width="1.5" marker-end="url(#arr)"/>
 
           <!-- Navegador -->
-          <rect x="85" y="182" width="130" height="48" rx="24" fill="#1e293b" stroke="#5BC0EB" stroke-width="1.5" filter="url(#sh)"/>
+          <rect x="85" y="182" width="130" height="48" rx="24" fill="#ffffff" stroke="#5d4037" stroke-width="1.5" filter="url(#sh)"/>
           <text x="150" y="204" text-anchor="middle" font-size="16">🌐</text>
-          <text x="150" y="222" text-anchor="middle" font-size="10" fill="#7dd3fc" font-weight="600" font-family="sans-serif">Navegador</text>
+          <text x="150" y="222" text-anchor="middle" font-size="10" fill="#3e2723" font-weight="600" font-family="sans-serif">Navegador</text>
 
-          <line x1="150" y1="234" x2="150" y2="260" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
+          <line x1="150" y1="234" x2="150" y2="260" stroke="#c9beb1" stroke-width="1.5" marker-end="url(#arr)"/>
 
           <!-- Vercel CDN -->
-          <rect x="85" y="264" width="130" height="48" rx="24" fill="#0c4a6e" stroke="#38bdf8" stroke-width="2" filter="url(#sh)"/>
-          <text x="150" y="286" text-anchor="middle" font-size="14">▲</text>
-          <text x="150" y="304" text-anchor="middle" font-size="10" fill="#67e8f9" font-weight="700" font-family="sans-serif">Vercel CDN</text>
+          <rect x="85" y="264" width="130" height="48" rx="24" fill="#3e2723" stroke="#3e2723" stroke-width="2" filter="url(#sh)"/>
+          <text x="150" y="286" text-anchor="middle" font-size="14" fill="#faf6f0">▲</text>
+          <text x="150" y="304" text-anchor="middle" font-size="10" fill="#faf6f0" font-weight="700" font-family="sans-serif">Vercel CDN</text>
 
           <!-- SSG note -->
-          <rect x="55" y="338" width="190" height="68" rx="8" fill="rgba(184,115,51,0.08)" stroke="#b87333" stroke-width="1" stroke-dasharray="4,3"/>
-          <text x="150" y="358" text-anchor="middle" font-size="10" font-weight="700" fill="#fbbf24" font-family="sans-serif">SSG · 12 pre-renders</text>
-          <text x="150" y="375" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="sans-serif">generateStaticParams</text>
-          <text x="150" y="388" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="sans-serif">genera una HTML por</text>
-          <text x="150" y="400" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="sans-serif">instrumento en build</text>
+          <rect x="55" y="338" width="190" height="68" rx="8" fill="#f5e6d3" stroke="#b87333" stroke-width="1" stroke-dasharray="4,3"/>
+          <text x="150" y="358" text-anchor="middle" font-size="10" font-weight="700" fill="#b87333" font-family="sans-serif">SSG · 12 pre-renders</text>
+          <text x="150" y="375" text-anchor="middle" font-size="8" fill="#5d4037" font-family="sans-serif">generateStaticParams</text>
+          <text x="150" y="388" text-anchor="middle" font-size="8" fill="#5d4037" font-family="sans-serif">genera una HTML por</text>
+          <text x="150" y="400" text-anchor="middle" font-size="8" fill="#5d4037" font-family="sans-serif">instrumento en build</text>
 
-          <text x="150" y="438" text-anchor="middle" font-size="7" fill="#64748b" font-family="sans-serif">edge geográfico cercano</text>
+          <text x="150" y="438" text-anchor="middle" font-size="7" fill="#8a7d6e" font-family="sans-serif">edge geográfico cercano</text>
 
           <!-- ============= PANEL 2: APP STACK (CENTRAL) ============= -->
-          <rect x="290" y="62" width="380" height="395" rx="12" fill="url(#appGrad)" stroke="#b87333" stroke-width="1.5"/>
-          <text x="480" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#b87333" letter-spacing="2" font-family="sans-serif">ORIGEN APP — STACK EN CAPAS</text>
+          <rect x="290" y="62" width="380" height="395" rx="12" fill="url(#panelGrad)" stroke="#b87333" stroke-width="1.5"/>
+          <text x="480" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#b87333" letter-spacing="2" font-family="sans-serif">MUSICTRACK APP — STACK EN CAPAS</text>
 
           <!-- Layer 1: HTML semántico -->
-          <rect x="305" y="98" width="350" height="50" rx="6" fill="#0c4a6e" stroke="#5BC0EB" stroke-width="1.2" filter="url(#sh)"/>
-          <text x="318" y="118" font-size="11" font-weight="700" fill="#7dd3fc" font-family="sans-serif">📄 HTML semántico</text>
-          <text x="318" y="135" font-size="8" fill="#94a3b8" font-family="sans-serif">app/layout.js · header · main · footer · article · section</text>
+          <rect x="305" y="98" width="350" height="50" rx="6" fill="#ffffff" stroke="#5d4037" stroke-width="1.2" filter="url(#sh)"/>
+          <text x="318" y="118" font-size="11" font-weight="700" fill="#3e2723" font-family="sans-serif">📄 HTML semántico</text>
+          <text x="318" y="135" font-size="8" fill="#5d4037" font-family="sans-serif">app/layout.js · header · main · footer · article · section</text>
 
           <!-- Layer 2: CSS -->
-          <rect x="305" y="154" width="350" height="50" rx="6" fill="#7c2d12" stroke="#f97316" stroke-width="1.2" filter="url(#sh)"/>
-          <text x="318" y="174" font-size="11" font-weight="700" fill="#fdba74" font-family="sans-serif">🎨 CSS Modules</text>
-          <text x="318" y="191" font-size="8" fill="#94a3b8" font-family="sans-serif">globals.css (variables + utilidades) · *.module.css scoped por componente</text>
+          <rect x="305" y="154" width="350" height="50" rx="6" fill="#fdf3e7" stroke="#b87333" stroke-width="1.2" filter="url(#sh)"/>
+          <text x="318" y="174" font-size="11" font-weight="700" fill="#8b5a2b" font-family="sans-serif">🎨 CSS Modules</text>
+          <text x="318" y="191" font-size="8" fill="#5d4037" font-family="sans-serif">globals.css (variables + utilidades) · *.module.css scoped por componente</text>
 
           <!-- Layer 3: Components + Routes -->
-          <rect x="305" y="210" width="350" height="78" rx="6" fill="#14532d" stroke="#7AC74F" stroke-width="1.2" filter="url(#sh)"/>
-          <text x="318" y="230" font-size="11" font-weight="700" fill="#86efac" font-family="sans-serif">⚛️ React Components · Rutas</text>
-          <text x="318" y="247" font-size="8" fill="#cbd5e1" font-family="sans-serif"><tspan font-weight="600" fill="#86efac">UI:</tspan> Navbar · Footer · ProductCard · ProductGrid · ProductFilters · CartItem</text>
-          <text x="318" y="261" font-size="8" fill="#cbd5e1" font-family="sans-serif"><tspan font-weight="600" fill="#86efac">Rutas:</tspan> / · /productos · /productos/[id] · /carrito · /checkout</text>
-          <text x="318" y="278" font-size="8" fill="#94a3b8" font-style="italic" font-family="sans-serif">App Router · file-based routing · Server + Client Components</text>
+          <rect x="305" y="210" width="350" height="78" rx="6" fill="#ffffff" stroke="#3e2723" stroke-width="1.2" filter="url(#sh)"/>
+          <text x="318" y="230" font-size="11" font-weight="700" fill="#3e2723" font-family="sans-serif">⚛️ React Components · Rutas</text>
+          <text x="318" y="247" font-size="8" fill="#5d4037" font-family="sans-serif"><tspan font-weight="600" fill="#3e2723">UI:</tspan> Navbar · Footer · ProductCard · ProductGrid · ProductFilters · CartItem</text>
+          <text x="318" y="261" font-size="8" fill="#5d4037" font-family="sans-serif"><tspan font-weight="600" fill="#3e2723">Rutas:</tspan> / · /productos · /productos/[id] · /carrito · /checkout</text>
+          <text x="318" y="278" font-size="8" fill="#8a7d6e" font-style="italic" font-family="sans-serif">App Router · file-based routing · Server + Client Components</text>
 
           <!-- Layer 4: Estado -->
-          <rect x="305" y="294" width="350" height="50" rx="6" fill="#581c87" stroke="#a78bfa" stroke-width="1.2" filter="url(#sh)"/>
-          <text x="318" y="314" font-size="11" font-weight="700" fill="#c4b5fd" font-family="sans-serif">🔄 Estado Global · CartContext</text>
-          <text x="318" y="331" font-size="8" fill="#94a3b8" font-family="sans-serif">useState (items) + useEffect (sync) · setState dispara re-render en todos los suscriptores</text>
+          <rect x="305" y="294" width="350" height="50" rx="6" fill="#fdf3e7" stroke="#b87333" stroke-width="1.2" filter="url(#sh)"/>
+          <text x="318" y="314" font-size="11" font-weight="700" fill="#b87333" font-family="sans-serif">🔄 Estado Global · CartContext</text>
+          <text x="318" y="331" font-size="8" fill="#5d4037" font-family="sans-serif">useState (items) + useEffect (sync) · setState dispara re-render en todos los suscriptores</text>
 
           <!-- Layer 5: Datos -->
-          <rect x="305" y="350" width="350" height="62" rx="6" fill="#7e1d4a" stroke="#f472b6" stroke-width="1.2" filter="url(#sh)"/>
-          <text x="318" y="370" font-size="11" font-weight="700" fill="#f9a8d4" font-family="sans-serif">💾 Datos · Persistencia</text>
-          <text x="318" y="387" font-size="8" fill="#cbd5e1" font-family="sans-serif"><tspan font-weight="600" fill="#f9a8d4">products.js</tspan> — 12 instrumentos mock (sin fetch, sin backend)</text>
-          <text x="318" y="402" font-size="8" fill="#cbd5e1" font-family="sans-serif"><tspan font-weight="600" fill="#f9a8d4">localStorage</tspan> — key: origen_cart · hidrata + persiste el carrito</text>
+          <rect x="305" y="350" width="350" height="62" rx="6" fill="#ffffff" stroke="#5d4037" stroke-width="1.2" filter="url(#sh)"/>
+          <text x="318" y="370" font-size="11" font-weight="700" fill="#3e2723" font-family="sans-serif">💾 Datos · Persistencia</text>
+          <text x="318" y="387" font-size="8" fill="#5d4037" font-family="sans-serif"><tspan font-weight="600" fill="#3e2723">products.js</tspan> — 12 instrumentos mock (sin fetch, sin backend)</text>
+          <text x="318" y="402" font-size="8" fill="#5d4037" font-family="sans-serif"><tspan font-weight="600" fill="#3e2723">localStorage</tspan> — key: musictrack_cart · hidrata + persiste el carrito</text>
 
-          <text x="480" y="438" text-anchor="middle" font-size="8" fill="#64748b" font-style="italic" font-family="sans-serif">arriba: lo que el usuario ve · abajo: dónde viven los datos</text>
+          <text x="480" y="438" text-anchor="middle" font-size="8" fill="#8a7d6e" font-style="italic" font-family="sans-serif">arriba: lo que el usuario ve · abajo: dónde viven los datos</text>
 
           <!-- ============= PANEL 3: DEPLOY ============= -->
-          <rect x="690" y="62" width="240" height="395" rx="12" fill="url(#deployGrad)" stroke="#334155" stroke-width="1"/>
-          <text x="810" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#38bdf8" letter-spacing="2" font-family="sans-serif">DEPLOY · CI/CD</text>
+          <rect x="690" y="62" width="240" height="395" rx="12" fill="url(#panelGrad)" stroke="#e8dfd3" stroke-width="1"/>
+          <text x="810" y="82" text-anchor="middle" font-size="9" font-weight="700" fill="#b87333" letter-spacing="2" font-family="sans-serif">DEPLOY · CI/CD</text>
 
           <!-- Local -->
-          <rect x="745" y="100" width="130" height="44" rx="8" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5" filter="url(#sh)"/>
+          <rect x="745" y="100" width="130" height="44" rx="8" fill="#ffffff" stroke="#5d4037" stroke-width="1.5" filter="url(#sh)"/>
           <text x="810" y="120" text-anchor="middle" font-size="14">💻</text>
-          <text x="810" y="138" text-anchor="middle" font-size="9" fill="#cbd5e1" font-weight="600" font-family="sans-serif">Código local</text>
+          <text x="810" y="138" text-anchor="middle" font-size="9" fill="#3e2723" font-weight="600" font-family="sans-serif">Código local</text>
 
-          <line x1="810" y1="148" x2="810" y2="172" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
-          <text x="853" y="164" font-size="8" fill="#7dd3fc" font-family="sans-serif">git push</text>
+          <line x1="810" y1="148" x2="810" y2="172" stroke="#c9beb1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="853" y="164" font-size="8" fill="#b87333" font-family="sans-serif">git push</text>
 
           <!-- GitHub -->
-          <rect x="745" y="176" width="130" height="44" rx="8" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5" filter="url(#sh)"/>
+          <rect x="745" y="176" width="130" height="44" rx="8" fill="#ffffff" stroke="#5d4037" stroke-width="1.5" filter="url(#sh)"/>
           <text x="810" y="196" text-anchor="middle" font-size="14">🐙</text>
-          <text x="810" y="214" text-anchor="middle" font-size="9" fill="#cbd5e1" font-weight="600" font-family="sans-serif">GitHub · main</text>
+          <text x="810" y="214" text-anchor="middle" font-size="9" fill="#3e2723" font-weight="600" font-family="sans-serif">GitHub · main</text>
 
-          <line x1="810" y1="224" x2="810" y2="248" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
-          <text x="853" y="240" font-size="8" fill="#7dd3fc" font-family="sans-serif">webhook</text>
+          <line x1="810" y1="224" x2="810" y2="248" stroke="#c9beb1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="853" y="240" font-size="8" fill="#b87333" font-family="sans-serif">webhook</text>
 
           <!-- Vercel build -->
-          <rect x="745" y="252" width="130" height="44" rx="8" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5" filter="url(#sh)"/>
+          <rect x="745" y="252" width="130" height="44" rx="8" fill="#ffffff" stroke="#b87333" stroke-width="1.5" filter="url(#sh)"/>
           <text x="810" y="272" text-anchor="middle" font-size="14">▲</text>
-          <text x="810" y="290" text-anchor="middle" font-size="9" fill="#7dd3fc" font-weight="600" font-family="sans-serif">Vercel build</text>
+          <text x="810" y="290" text-anchor="middle" font-size="9" fill="#b87333" font-weight="600" font-family="sans-serif">Vercel build</text>
 
-          <line x1="810" y1="300" x2="810" y2="324" stroke="#475569" stroke-width="1.5" marker-end="url(#arr)"/>
-          <text x="853" y="316" font-size="8" fill="#7dd3fc" font-family="sans-serif">deploy</text>
+          <line x1="810" y1="300" x2="810" y2="324" stroke="#c9beb1" stroke-width="1.5" marker-end="url(#arr)"/>
+          <text x="853" y="316" font-size="8" fill="#b87333" font-family="sans-serif">deploy</text>
 
           <!-- URL pública -->
-          <rect x="745" y="328" width="130" height="44" rx="8" fill="#0c4a6e" stroke="#5BC0EB" stroke-width="2" filter="url(#sh)"/>
-          <text x="810" y="348" text-anchor="middle" font-size="14">🌍</text>
-          <text x="810" y="366" text-anchor="middle" font-size="9" fill="#7dd3fc" font-weight="700" font-family="sans-serif">URL pública</text>
+          <rect x="745" y="328" width="130" height="44" rx="8" fill="#3e2723" stroke="#3e2723" stroke-width="2" filter="url(#sh)"/>
+          <text x="810" y="348" text-anchor="middle" font-size="14" fill="#faf6f0">🌍</text>
+          <text x="810" y="366" text-anchor="middle" font-size="9" fill="#faf6f0" font-weight="700" font-family="sans-serif">URL pública</text>
 
-          <text x="810" y="396" text-anchor="middle" font-size="7" fill="#64748b" font-family="sans-serif">cada commit dispara un build</text>
-          <text x="810" y="408" text-anchor="middle" font-size="7" fill="#64748b" font-family="sans-serif">build OK → URL actualizada</text>
-          <text x="810" y="420" text-anchor="middle" font-size="7" fill="#64748b" font-family="sans-serif">build falla → deploy rechazado</text>
+          <text x="810" y="396" text-anchor="middle" font-size="7" fill="#8a7d6e" font-family="sans-serif">cada commit dispara un build</text>
+          <text x="810" y="408" text-anchor="middle" font-size="7" fill="#8a7d6e" font-family="sans-serif">build OK → URL actualizada</text>
+          <text x="810" y="420" text-anchor="middle" font-size="7" fill="#8a7d6e" font-family="sans-serif">build falla → deploy rechazado</text>
 
-          <text x="810" y="445" text-anchor="middle" font-size="7" fill="#475569" font-family="sans-serif">origen-six.vercel.app</text>
+          <text x="810" y="445" text-anchor="middle" font-size="7" fill="#a89889" font-family="sans-serif">musictrack.vercel.app</text>
 
           <!-- ============= LEGEND BOTTOM ============= -->
-          <rect x="30" y="475" width="900" height="32" rx="6" fill="#1e293b" stroke="#334155" stroke-width="1"/>
-          <circle cx="55" cy="491" r="4" fill="#7AC74F"/>
-          <text x="65" y="494" font-size="8" fill="#94a3b8" font-family="sans-serif">Server Component (default)</text>
-          <circle cx="225" cy="491" r="4" fill="#f59e0b"/>
-          <text x="235" y="494" font-size="8" fill="#94a3b8" font-family="sans-serif">Client Component ("use client")</text>
-          <text x="480" y="494" text-anchor="middle" font-size="8" fill="#cbd5e1" font-style="italic" font-family="sans-serif">flujo: setState → re-render → useEffect → localStorage</text>
-          <text x="900" y="494" text-anchor="end" font-size="8" fill="#475569" font-family="sans-serif">Origen · 2026</text>
+          <rect x="30" y="475" width="900" height="32" rx="6" fill="#ffffff" stroke="#e8dfd3" stroke-width="1"/>
+          <circle cx="55" cy="491" r="4" fill="#3e2723"/>
+          <text x="65" y="494" font-size="8" fill="#5d4037" font-family="sans-serif">Server Component (default)</text>
+          <circle cx="225" cy="491" r="4" fill="#b87333"/>
+          <text x="235" y="494" font-size="8" fill="#5d4037" font-family="sans-serif">Client Component ("use client")</text>
+          <text x="480" y="494" text-anchor="middle" font-size="8" fill="#5d4037" font-style="italic" font-family="sans-serif">flujo: setState → re-render → useEffect → localStorage</text>
+          <text x="900" y="494" text-anchor="end" font-size="8" fill="#a89889" font-family="sans-serif">MusicTrack · 2026</text>
         </svg>
       </div>
 
@@ -885,7 +880,7 @@
         <div class="card js">
           <h3>🔄 State (useState)</h3>
           <p style="font-size: 0.92rem; margin: 0;">
-            Datos que <strong>cambian y disparan re-render</strong>. En Origen lo uso para:
+            Datos que <strong>cambian y disparan re-render</strong>. En MusicTrack lo uso para:
             la cantidad en <code>AddToCartButton</code>, los <code>items</code> del carrito en
             <code>CartContext</code>, el <code>open</code> del menú móvil en el <code>Navbar</code>,
             y los <code>errors</code> del formulario de checkout.
@@ -895,7 +890,7 @@
         <div class="card js">
           <h3>⚡ useEffect</h3>
           <p style="font-size: 0.92rem; margin: 0;">
-            Se ejecuta <strong>después de renderizar</strong>. En Origen <strong>sincroniza el carrito con
+            Se ejecuta <strong>después de renderizar</strong>. En MusicTrack <strong>sincroniza el carrito con
             <code>localStorage</code></strong>: un efecto LEE al montar el componente, otro ESCRIBE cada
             vez que <code>items</code> cambia. Eso es lo que mantiene el carrito persistido entre sesiones.
           </p>

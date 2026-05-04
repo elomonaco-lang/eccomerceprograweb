@@ -20,7 +20,7 @@ export function generateMetadata({ params }) {
   const product = getProductById(params.id);
   if (!product) return { title: "Producto no encontrado" };
   return {
-    title: `${product.name} | Origen`,
+    title: `${product.name} | MusicTrack`,
     description: product.description,
   };
 }

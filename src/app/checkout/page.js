@@ -49,7 +49,7 @@ export default function CheckoutPage() {
     if (Object.keys(newErrors).length > 0) return;
 
     // Generamos un numero de orden aleatorio simulado.
-    const orderId = `ORG-${Date.now().toString().slice(-6)}`;
+    const orderId = `MT-${Date.now().toString().slice(-6)}`;
     setConfirmed({
       id: orderId,
       name: form.name,

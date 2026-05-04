@@ -1,6 +1,6 @@
-# Documentación de Prompts — Origen (instrumentos musicales)
+# Documentación de Prompts — MusicTrack (instrumentos musicales)
 
-> Anexo del parcial oral de Programación Web (71.38). Lista los prompts más importantes utilizados con **Claude Code** durante el desarrollo del frontend de **Origen**, una tienda online de instrumentos musicales (guitarras, bajos y accesorios). Los prompts están agrupados por feature. La idea es mostrar cómo se usó la IA de forma fundamentada: prompts específicos, validación, iteración.
+> Anexo del parcial oral de Programación Web (71.38). Lista los prompts más importantes utilizados con **Claude Code** durante el desarrollo del frontend de **MusicTrack**, una tienda online de instrumentos musicales (guitarras, bajos y accesorios). Los prompts están agrupados por feature. La idea es mostrar cómo se usó la IA de forma fundamentada: prompts específicos, validación, iteración.
 
 ---
 
@@ -14,7 +14,7 @@
 6. [Carrito y Checkout](#6-carrito-y-checkout)
 7. [Estilos y diseño responsive](#7-estilos-y-diseño-responsive)
 8. [Deploy a Vercel y README](#8-deploy-a-vercel-y-readme)
-9. [Rebrand del proyecto a Origen](#85-rebrand-del-proyecto-de-genérico-a-origen)
+9. [Rebrand del proyecto a MusicTrack](#85-rebrand-del-proyecto-de-genérico-a-origen)
 10. [Debugging y correcciones](#9-debugging-y-correcciones)
 11. [Presentación del parcial](#10-presentación-del-parcial)
 
@@ -23,7 +23,7 @@
 ## 1. Setup inicial Next.js
 
 ### Prompt
-> Necesito que crees desde cero un frontend para un e-commerce de **instrumentos musicales** (guitarras, bajos y accesorios) llamado **Origen**, para una materia de la facultad llamada Programación Web. Stack: Next.js 14 con App Router, JavaScript (no TypeScript), CSS Modules. Sin backend, sin DB, sin auth, sin pagos. Tiene que poder subirse a GitHub y deployarse en Vercel. Empezá creando: `package.json`, `next.config.mjs`, `jsconfig.json` con alias `@/*` apuntando a `src/*`, `.gitignore` y `.eslintrc.json`. No uses `create-next-app` — armá la estructura manualmente para tener control.
+> Necesito que crees desde cero un frontend para un e-commerce de **instrumentos musicales** (guitarras, bajos y accesorios) llamado **MusicTrack**, para una materia de la facultad llamada Programación Web. Stack: Next.js 14 con App Router, JavaScript (no TypeScript), CSS Modules. Sin backend, sin DB, sin auth, sin pagos. Tiene que poder subirse a GitHub y deployarse en Vercel. Empezá creando: `package.json`, `next.config.mjs`, `jsconfig.json` con alias `@/*` apuntando a `src/*`, `.gitignore` y `.eslintrc.json`. No uses `create-next-app` — armá la estructura manualmente para tener control.
 
 ### Por qué este prompt
 - **Limita el stack explícitamente** (no TS, no Tailwind, no librerías de UI) para evitar que la IA agregue cosas fuera de la consigna.
@@ -56,7 +56,7 @@
 ## 3. Estado global del carrito
 
 ### Prompt
-> Creá `src/context/CartContext.js`. Necesito un `CartProvider` y un hook `useCart()`. Funcionalidades: `addItem(product, quantity)`, `removeItem(id)`, `updateQuantity(id, qty)`, `increment(id)`, `decrement(id)`, `clearCart()`. Persistir en localStorage con la key `origen_cart`. **Importante:** evitar el bug de hidratación — no escribir en localStorage hasta haber leído primero, sino se pisa con el array vacío del primer render. Exponer también `totalItems`, `totalPrice` y un flag `hydrated`. Tiene que llevar `"use client"`.
+> Creá `src/context/CartContext.js`. Necesito un `CartProvider` y un hook `useCart()`. Funcionalidades: `addItem(product, quantity)`, `removeItem(id)`, `updateQuantity(id, qty)`, `increment(id)`, `decrement(id)`, `clearCart()`. Persistir en localStorage con la key `musictrack_cart`. **Importante:** evitar el bug de hidratación — no escribir en localStorage hasta haber leído primero, sino se pisa con el array vacío del primer render. Exponer también `totalItems`, `totalPrice` y un flag `hydrated`. Tiene que llevar `"use client"`.
 
 ### Por qué este prompt
 - **El bug de hidratación es real y conocido.** Mencionarlo explícitamente fuerza a la IA a poner el flag `hydrated` y dos `useEffect` separados, no uno solo.
@@ -124,7 +124,7 @@
 > - Email obligatorio + regex `^[^\s@]+@[^\s@]+\.[^\s@]+$`.
 > - Teléfono: al menos 6 dígitos numéricos.
 > - Dirección obligatoria.
-> Errores en `useState` mostrados debajo de cada campo. Al hacer submit válido: generar un orderId tipo `ORG-123456`, mostrar pantalla de éxito con número de orden, total, email, y dos botones (volver / seguir comprando). Vaciar el carrito al confirmar.
+> Errores en `useState` mostrados debajo de cada campo. Al hacer submit válido: generar un orderId tipo `MT-123456`, mostrar pantalla de éxito con número de orden, total, email, y dos botones (volver / seguir comprando). Vaciar el carrito al confirmar.
 
 ### Por qué este prompt
 - **Detalla las reglas de validación** exactas para que el profe pueda verlas en el código y coincidan con la presentación.
@@ -154,7 +154,7 @@
 ## 8. Deploy a Vercel y README
 
 ### Prompt
-> Generá un `README.md` claro para el proyecto **Origen** (instrumentos musicales). Incluí: nombre y tagline (*"Donde nace tu sonido"*), descripción de qué hace, stack, estructura de carpetas, listado del catálogo agrupado por categoría, funcionalidades implementadas, instrucciones para `npm install` / `npm run dev` / `npm run build`, pasos exactos para subir a GitHub (con los comandos `git init`, `git remote add`, etc.), pasos para deployar en Vercel (login con GitHub, Add New Project, deploy automático). Sección de "qué falta" honesta: backend, auth, pagos, reviews. Sección de "cómo personalizar" mostrando dónde editar el catálogo, la marca y los colores (las 4 variables CSS en `:root`).
+> Generá un `README.md` claro para el proyecto **MusicTrack** (instrumentos musicales). Incluí: nombre y tagline (*"Donde nace tu sonido"*), descripción de qué hace, stack, estructura de carpetas, listado del catálogo agrupado por categoría, funcionalidades implementadas, instrucciones para `npm install` / `npm run dev` / `npm run build`, pasos exactos para subir a GitHub (con los comandos `git init`, `git remote add`, etc.), pasos para deployar en Vercel (login con GitHub, Add New Project, deploy automático). Sección de "qué falta" honesta: backend, auth, pagos, reviews. Sección de "cómo personalizar" mostrando dónde editar el catálogo, la marca y los colores (las 4 variables CSS en `:root`).
 
 ### Por qué este prompt
 - Pide **comandos exactos** para que el lector (y yo durante el oral) pueda copiar/pegar.
@@ -167,10 +167,10 @@
 El proyecto pasó por **dos rebrands** durante el desarrollo. Esto es importante porque demuestra **extensibilidad real** de la arquitectura.
 
 ### Prompt 8.5.1 — Primer rebrand (a cápsulas de café)
-> Quiero rebrandear el e-commerce a una marca específica: **Origen**, una tienda de cápsulas de café compatibles. Aplicá el rebrand completo: (1) reemplazá los 12 productos genéricos por 12 cápsulas reales con cuatro categorías nuevas (Intenso / Suave / Descafeinado / Saborizado), nombres con sentido cafetero y descripciones con notas de cata; (2) cambiá la paleta a tonos café (crema de fondo, espresso oscuro como primario, caramelo como acento) modificando solo las variables CSS en `:root`; (3) actualizá el logo a un emoji de café, el nombre a "Origen", la metadata SEO, el copy del hero y los beneficios; (4) cambiá la storage key del carrito de `webcommerce_cart` a `origen_cart` y el prefijo del orderId de `WC-` a `ORG-`; (5) actualizá el README para reflejar el catálogo y la marca. Verificá con `npm run build` que siga compilando.
+> Quiero rebrandear el e-commerce a una marca específica: **MusicTrack**, una tienda de cápsulas de café compatibles. Aplicá el rebrand completo: (1) reemplazá los 12 productos genéricos por 12 cápsulas reales con cuatro categorías nuevas (Intenso / Suave / Descafeinado / Saborizado), nombres con sentido cafetero y descripciones con notas de cata; (2) cambiá la paleta a tonos café (crema de fondo, espresso oscuro como primario, caramelo como acento) modificando solo las variables CSS en `:root`; (3) actualizá el logo a un emoji de café, el nombre a "MusicTrack", la metadata SEO, el copy del hero y los beneficios; (4) cambiá la storage key del carrito de `webcommerce_cart` a `musictrack_cart` y el prefijo del orderId de `WC-` a `MT-`; (5) actualizá el README para reflejar el catálogo y la marca. Verificá con `npm run build` que siga compilando.
 
 ### Prompt 8.5.2 — Segundo rebrand (a instrumentos musicales)
-> Quiero pivotar la tienda: ahora vende **instrumentos musicales**, principalmente guitarras. Mantené el nombre **Origen** porque le queda. Cambiá el catálogo a 12 instrumentos: 4 guitarras eléctricas (Stratocaster, Les Paul, Telecaster, SG), 3 acústicas (folk, clásica nylon, electroacústica), 2 bajos (Jazz Bass, Precision Bass) y 3 accesorios (amplificador, pedal de distorsión, set de cuerdas). Descripciones con lenguaje técnico real (caoba, single coil, humbucker, tremolo, etc.). Logo cambia a 🎸. Tagline a *"Donde nace tu sonido"*. Beneficios: probadas y testeadas, envío rápido, garantía oficial, asesoramiento. Mantené la paleta de tonos cálidos porque funciona para la madera de las guitarras.
+> Quiero pivotar la tienda: ahora vende **instrumentos musicales**, principalmente guitarras. Mantené el nombre **MusicTrack** porque le queda. Cambiá el catálogo a 12 instrumentos: 4 guitarras eléctricas (Stratocaster, Les Paul, Telecaster, SG), 3 acústicas (folk, clásica nylon, electroacústica), 2 bajos (Jazz Bass, Precision Bass) y 3 accesorios (amplificador, pedal de distorsión, set de cuerdas). Descripciones con lenguaje técnico real (caoba, single coil, humbucker, tremolo, etc.). Logo cambia a 🎸. Tagline a *"Donde nace tu sonido"*. Beneficios: probadas y testeadas, envío rápido, garantía oficial, asesoramiento. Mantené la paleta de tonos cálidos porque funciona para la madera de las guitarras.
 
 ### Por qué estos prompts
 - **Demuestran que la app está bien arquitecturada:** un solo prompt rebrandea toda la UI porque los colores están centralizados en variables CSS y el catálogo en un único archivo. El segundo rebrand fue aún más ágil porque la paleta no cambió.

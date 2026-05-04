@@ -30,7 +30,7 @@ export default function Navbar() {
               />
             </svg>
           </span>
-          <span className={styles.brandText}>Origen</span>
+          <span className={styles.brandText}>MusicTrack</span>
         </Link>
 
         <button

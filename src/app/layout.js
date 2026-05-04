@@ -4,9 +4,9 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export const metadata = {
-  title: "Origen | Instrumentos musicales",
+  title: "MusicTrack | Instrumentos musicales",
   description:
-    "Origen es una tienda online de instrumentos musicales: guitarras electricas, acusticas, bajos y accesorios. Donde nace tu sonido. Proyecto academico desarrollado con Next.js.",
+    "MusicTrack es una tienda online de instrumentos musicales: guitarras electricas, acusticas, bajos y accesorios. Donde nace tu sonido. Proyecto academico desarrollado con Next.js.",
 };
 
 export default function RootLayout({ children }) {
