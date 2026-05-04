@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
+import { imageFallback } from "@/lib/imageFallback";
 import styles from "./ProductCard.module.css";
 
 export default function ProductCard({ product }) {
@@ -18,7 +19,12 @@ export default function ProductCard({ product }) {
       <Link href={`/productos/${product.id}`} className={styles.imageWrap}>
         {/* Usamos img tag plano para no necesitar configuracion adicional de imagenes */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={product.image} alt={product.name} loading="lazy" />
+        <img
+          src={product.image}
+          alt={product.name}
+          loading="lazy"
+          onError={imageFallback(product.name)}
+        />
       </Link>
 
       <div className={styles.body}>

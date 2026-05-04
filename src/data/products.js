@@ -21,7 +21,7 @@ export const products = [
       "Guitarra electrica de cuerpo solido con tapa de arce flameado y caoba en el cuerpo. Mastil de caoba con diapason de palo de rosa. Dos pastillas humbucker, puente Tune-O-Matic. Sustain prolongado, sonido grueso y calido. Hecha para rock y hard rock.",
     category: "Electricas",
     image:
-      "https://images.unsplash.com/photo-1564186763-fc1da1a8a3c0?w=800&q=80",
+      "https://images.unsplash.com/photo-1471478331149-c72f17e33c73?w=800&q=80",
     stock: 5,
   },
   {
@@ -32,7 +32,7 @@ export const products = [
       "Guitarra electrica de cuerpo de fresno acabado butterscotch blonde. Mastil de arce de una sola pieza, dos pastillas single coil con bridge plate de acero. Brillante, mordiente y articulada. Iconica del country, rock e indie.",
     category: "Electricas",
     image:
-      "https://images.unsplash.com/photo-1564186763-2f5e0e96f1f4?w=800&q=80",
+      "https://images.unsplash.com/photo-1519892300165-cb5542fb47c7?w=800&q=80",
     stock: 7,
   },
   {
@@ -65,7 +65,7 @@ export const products = [
       "Guitarra clasica con cuerdas de nylon. Tapa de cedro, fondo y aros de palo de rosa, mastil de cedro. Diapason de ebano. Sonido calido y dulce, ideal para folklore, bossa nova y musica clasica.",
     category: "Acusticas",
     image:
-      "https://images.unsplash.com/photo-1558098329-a11cff621064?w=800&q=80",
+      "https://images.unsplash.com/photo-1488412253247-5e0eafb2fe04?w=800&q=80",
     stock: 10,
   },
   {
@@ -76,7 +76,7 @@ export const products = [
       "Guitarra electroacustica con caja Jumbo y cutaway. Tapa de pino abeto macizo, preamplificador con afinador integrado y EQ de 3 bandas. Conexion jack 1/4 para amplificar. Versatil para vivo y grabacion.",
     category: "Acusticas",
     image:
-      "https://images.unsplash.com/photo-1556449895-a33c9dba33dd?w=800&q=80",
+      "https://images.unsplash.com/photo-1483450388369-9ed95738483c?w=800&q=80",
     stock: 8,
   },
   {
@@ -87,7 +87,7 @@ export const products = [
       "Bajo electrico estilo Jazz Bass de 4 cuerdas. Cuerpo de aliso, mastil de arce con diapason de palo de rosa. Dos pastillas single coil con controles de volumen independientes y tono maestro. Mastil delgado, sonido moderno y articulado.",
     category: "Bajos",
     image:
-      "https://images.unsplash.com/photo-1583120715055-c5dba93cf67d?w=800&q=80",
+      "https://images.unsplash.com/photo-1545167622-3a6ac756afa4?w=800&q=80",
     stock: 4,
   },
   {
@@ -109,7 +109,7 @@ export const products = [
       "Amplificador combo de 30W con parlante de 10 pulgadas. Dos canales (limpio y crunch), reverb digital, entrada auxiliar para celular y salida de auriculares. Ideal para practica y ensayos chicos.",
     category: "Accesorios",
     image:
-      "https://images.unsplash.com/photo-1556379118-7034d926d258?w=800&q=80",
+      "https://images.unsplash.com/photo-1601412436009-d964bd02edbc?w=800&q=80",
     stock: 15,
   },
   {
@@ -120,7 +120,7 @@ export const products = [
       "Pedal de distorsion analogico con tres controles: volumen, tono y ganancia. Bypass real, alimentacion 9V (no incluye fuente). Sonido grueso y armonico estilo amplificador valvular. Construccion metalica robusta.",
     category: "Accesorios",
     image:
-      "https://images.unsplash.com/photo-1571974599782-87624638275a?w=800&q=80",
+      "https://images.unsplash.com/photo-1595167040407-3b5d27f2c0d5?w=800&q=80",
     stock: 25,
   },
   {
@@ -131,7 +131,7 @@ export const products = [
       "Juego completo de cuerdas para guitarra electrica calibre 0.10-0.46. Nucleo de acero hexagonal con entorchado de niquel. Empacadas individualmente con sellado anti-corrosion. Sonido brillante y duradero.",
     category: "Accesorios",
     image:
-      "https://images.unsplash.com/photo-1599642010050-7e2f1bbd0e93?w=800&q=80",
+      "https://images.unsplash.com/photo-1558098329-a11cff621064?w=800&q=80",
     stock: 100,
   },
 ];

@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 import { formatPrice } from "@/lib/format";
+import { imageFallback } from "@/lib/imageFallback";
 import styles from "./CartItem.module.css";
 
 export default function CartItem({ item }) {
@@ -13,7 +14,11 @@ export default function CartItem({ item }) {
     <div className={styles.item}>
       <Link href={`/productos/${item.id}`} className={styles.imageWrap}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={item.image} alt={item.name} />
+        <img
+          src={item.image}
+          alt={item.name}
+          onError={imageFallback(item.name)}
+        />
       </Link>
 
       <div className={styles.info}>

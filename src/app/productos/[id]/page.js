@@ -6,6 +6,7 @@ import {
   products,
 } from "@/data/products";
 import ProductGrid from "@/components/ProductGrid";
+import ProductImage from "@/components/ProductImage";
 import AddToCartButton from "./AddToCartButton";
 import { formatPrice } from "@/lib/format";
 import styles from "./page.module.css";
@@ -19,7 +20,7 @@ export function generateMetadata({ params }) {
   const product = getProductById(params.id);
   if (!product) return { title: "Producto no encontrado" };
   return {
-    title: `${product.name} | WebCommerce`,
+    title: `${product.name} | Origen`,
     description: product.description,
   };
 }
@@ -45,8 +46,7 @@ export default function ProductDetailPage({ params }) {
 
       <div className={styles.detail}>
         <div className={styles.imageWrap}>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={product.image} alt={product.name} />
+          <ProductImage src={product.image} alt={product.name} />
         </div>
 
         <div className={styles.info}>
