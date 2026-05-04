@@ -1015,32 +1015,6 @@
           </ul>
         </div>
 
-        <div class="card" style="grid-column: 1 / -1; border-color: var(--accent)">
-          <h3 style="color: var(--accent)">Errores reales que detectó la IA</h3>
-          <table style="margin: 0">
-            <thead>
-              <tr><th>Bug</th><th>Causa</th><th>Solución</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>Build estático rompía</td>
-                <td><code>useSearchParams</code> sin Suspense en SSG</td>
-                <td>Separar en <code>ProductsView</code> envuelto en <code>&lt;Suspense&gt;</code></td>
-              </tr>
-              <tr>
-                <td>Badge parpadea en "0"</td>
-                <td>Mismatch SSR vs hidratación de <code>localStorage</code></td>
-                <td>Flag <code>hydrated</code>, no renderizar hasta <code>true</code></td>
-              </tr>
-              <tr>
-                <td><code>generateStaticParams</code> falla</td>
-                <td>Next exige <code>string</code>, mandé <code>number</code></td>
-                <td><code>String(p.id)</code></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-
         <div class="card js" style="grid-column: 1 / -1">
           <h3>Yo vs IA</h3>
           <div class="grid-3" style="gap: 0.75rem; margin-top: 0.5rem">
