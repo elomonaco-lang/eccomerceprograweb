@@ -29,13 +29,24 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
+  width: 36px;
+  height: 36px;
   background: var(--color-primary);
-  color: white;
-  font-size: 1.05rem;
+  color: var(--color-bg);
   border-radius: var(--radius-sm);
   line-height: 1;
+}
+
+.logoMark svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.brandText {
+  font-family: "Georgia", "Times New Roman", serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .nav {
