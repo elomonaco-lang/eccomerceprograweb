@@ -1005,23 +1005,13 @@
       </p>
 
       <div class="grid-2">
-        <div class="card js">
+        <div class="card js" style="grid-column: 1 / -1;">
           <h3>Herramienta y justificación</h3>
           <ul>
             <li><strong>Claude Code</strong> (CLI agentic, integrado a VS Code)</li>
             <li>Lee y escribe archivos directamente en el repo</li>
             <li>Ejecuta <code>npm run build</code> para validar</li>
             <li>Mantiene contexto multi-archivo → trabajo a nivel <em>feature</em>, no snippet aislado</li>
-          </ul>
-        </div>
-
-        <div class="card js">
-          <h3>Cómo validé lo generado</h3>
-          <ul>
-            <li><strong>Lectura previa:</strong> ningún archivo aceptado sin leerlo</li>
-            <li><strong>Build:</strong> <code>npm run build</code> después de cada feature</li>
-            <li><strong>Test manual:</strong> agregar / quitar / recargar / vaciar / checkout</li>
-            <li><strong>Cortar fuera de scope:</strong> Tailwind, librerías UI, TS</li>
           </ul>
         </div>
 
