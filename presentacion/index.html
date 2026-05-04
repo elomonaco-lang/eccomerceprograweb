@@ -621,178 +621,11 @@
       </p>
     </section>
 
-    <!-- ========== SLIDE 3 — HTML/CSS/JS ========== -->
+    <!-- ========== SLIDE 3 — DIAGRAMA ========== -->
     <section class="slide">
       <header class="slide-header">
-        <span class="slide-kicker">Slide 3 · Módulo 2</span>
+        <span class="slide-kicker">Slide 3 · Arquitectura</span>
         <span class="slide-num">03 / 07</span>
-      </header>
-
-      <h1>Fundamentos HTML / CSS / JS</h1>
-      <p class="lead">Cada concepto, anclado a un archivo concreto del repo.</p>
-
-      <div class="grid-2">
-        <div class="card html">
-          <h3>HTML semántico</h3>
-          <ul>
-            <li><code>&lt;header&gt;</code> + <code>&lt;nav&gt;</code> en <span class="filepath">Navbar.js</span></li>
-            <li><code>&lt;main&gt;</code> en <span class="filepath">app/layout.js:15</span></li>
-            <li><code>&lt;article&gt;</code> por producto en <span class="filepath">ProductCard.js:18</span></li>
-            <li><code>&lt;section&gt;</code> separa hero / destacados / categorías / beneficios</li>
-            <li><code>&lt;footer&gt;</code> con <code>h3/h4/ul</code> jerárquicos</li>
-          </ul>
-        </div>
-
-        <div class="card html">
-          <h3>Accesibilidad / ARIA</h3>
-          <ul>
-            <li><code>aria-label="Abrir menu"</code> + <code>aria-expanded</code> en hamburguesa</li>
-            <li><code>&lt;nav aria-label="Breadcrumb"&gt;</code> en detalle</li>
-            <li><code>aria-label</code> dinámico en cada botón "Agregar"</li>
-            <li><code>&lt;label htmlFor&gt;</code> asociado a cada input del checkout</li>
-          </ul>
-        </div>
-
-        <div class="card css">
-          <h3>Responsive · Grid + Flex</h3>
-          <ul>
-            <li>Catálogo: <strong>4 → 3 → 2 → 1</strong> col en <span class="filepath">ProductGrid.module.css</span></li>
-            <li>Carrito: <code>1fr 340px</code> → <code>1fr</code> bajo 900px</li>
-            <li>Flexbox en navbar y barra de acciones</li>
-            <li>Variables CSS en <code>:root</code> centralizan paleta</li>
-          </ul>
-        </div>
-
-        <div class="card js">
-          <h3>Eventos en JS</h3>
-          <ul>
-            <li><code>onClick</code> agregar al carrito · <span class="filepath">ProductCard.js:11</span></li>
-            <li><code>onClick</code> +/− cantidad · <span class="filepath">CartItem.js:30</span></li>
-            <li><code>onSubmit</code> + <code>preventDefault</code> · <span class="filepath">checkout/page.js:42</span></li>
-            <li><code>onChange</code> en buscador y selects de filtros</li>
-          </ul>
-        </div>
-
-      </div>
-
-      <p class="footnote">
-        <strong>Módulos ES6:</strong> <code>export</code> / <code>import</code> con alias <code>@/*</code> en <span class="filepath">jsconfig.json</span> · una responsabilidad por archivo
-        (<code>lib/format.js</code> formatea precios, <code>context/</code> maneja estado, <code>components/</code> presenta UI).
-      </p>
-    </section>
-
-    <!-- ========== SLIDE 4 — REACT + NEXT.JS ========== -->
-    <section class="slide">
-      <header class="slide-header">
-        <span class="slide-kicker">Slide 4 · Módulo 3</span>
-        <span class="slide-num">04 / 07</span>
-      </header>
-
-      <h1>React + Next.js</h1>
-
-      <div class="grid-2">
-        <div>
-          <h3 style="color: var(--js)">Props vs State</h3>
-          <table>
-            <thead>
-              <tr><th></th><th>Props</th><th>State</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>Qué</strong></td>
-                <td>Datos de afuera, <em>read-only</em></td>
-                <td>Datos internos, mutables</td>
-              </tr>
-              <tr>
-                <td><strong>Ejemplo</strong></td>
-                <td><code>&lt;ProductCard product={p} /&gt;</code> en <span class="filepath">ProductGrid.js:14</span></td>
-                <td><code>const [quantity, setQuantity] = useState(1)</code> en <span class="filepath">AddToCartButton.js:10</span></td>
-              </tr>
-              <tr>
-                <td><strong>Más</strong></td>
-                <td><code>onSortChange</code>, <code>item</code>, <code>categories</code></td>
-                <td><code>items</code> en Context, <code>open</code> del menú, <code>form</code> y <code>errors</code></td>
-              </tr>
-            </tbody>
-          </table>
-
-          <h3 style="color: var(--js)">useEffect — uso funcional</h3>
-          <pre><code>// 1) Hidratar al montar (deps: [])
-useEffect(() =&gt; {
-  const stored = localStorage.getItem("origen_cart");
-  if (stored) setItems(JSON.parse(stored));
-  setHydrated(true);
-}, []);
-
-// 2) Persistir (deps: [items])
-useEffect(() =&gt; {
-  if (!hydrated) return;
-  localStorage.setItem("origen_cart",
-    JSON.stringify(items));
-}, [items, hydrated]);</code></pre>
-          <p class="muted" style="font-size: 0.85rem">
-            Dos efectos con dependencias distintas. El flag <code>hydrated</code> evita pisar el storage con el array vacío inicial.
-            <span class="filepath">→ context/CartContext.js:14-30</span>
-          </p>
-        </div>
-
-        <div>
-          <h3 style="color: var(--accent)">Re-render — paso a paso</h3>
-          <ol style="padding-left: 1.2rem; line-height: 1.8;">
-            <li>Click en <span class="hl">"Agregar"</span> dentro de <code>ProductCard</code></li>
-            <li><code>addItem(product)</code> ejecuta <code>setItems(...)</code> en el Context</li>
-            <li>React detecta nuevo estado → <strong>re-renderiza todos los suscriptores</strong> de <code>useCart()</code>: badge del navbar, totales, items</li>
-            <li>El <code>useEffect</code> con deps <code>[items]</code> dispara → guarda en <code>localStorage</code></li>
-          </ol>
-
-          <h3 style="color: var(--accent); margin-top: 1.2rem">Rutas en Next App Router</h3>
-          <div class="routes">
-            src/app/<br>
-            ├── page.js                <span class="arrow">→</span> <span class="url">/</span><br>
-            ├── productos/<br>
-            │   ├── page.js            <span class="arrow">→</span> <span class="url">/productos</span><br>
-            │   └── <span class="dyn">[id]</span>/page.js       <span class="arrow">→</span> <span class="url">/productos/3</span><br>
-            ├── carrito/page.js        <span class="arrow">→</span> <span class="url">/carrito</span><br>
-            ├── checkout/page.js       <span class="arrow">→</span> <span class="url">/checkout</span><br>
-            └── not-found.js           <span class="arrow">→</span> <span class="url">404</span>
-          </div>
-          <p class="muted" style="font-size: 0.85rem; margin-top: 0.5rem">
-            <code>generateStaticParams()</code> pre-renderiza las <strong>12 páginas de instrumentos</strong> en build (verificable: <code>npm run build</code> → <code>● (SSG)</code>).
-          </p>
-
-          <h3 style="color: var(--accent); margin-top: 1.2rem">Server vs Client Components</h3>
-          <table>
-            <thead>
-              <tr><th>Server (default)</th><th>Client (<code>"use client"</code>)</th></tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><code>app/layout.js</code></td>
-                <td><code>Navbar.js</code> (<code>useState</code>)</td>
-              </tr>
-              <tr>
-                <td><code>app/page.js</code></td>
-                <td><code>CartContext.js</code> (hooks + storage)</td>
-              </tr>
-              <tr>
-                <td><code>productos/[id]/page.js</code></td>
-                <td><code>AddToCartButton.js</code> (<code>onClick</code>)</td>
-              </tr>
-              <tr>
-                <td><code>productos/page.js</code> + <code>&lt;Suspense&gt;</code></td>
-                <td><code>ProductsView.js</code> (<code>useSearchParams</code>)</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ========== SLIDE 5 — DIAGRAMA ========== -->
-    <section class="slide">
-      <header class="slide-header">
-        <span class="slide-kicker">Slide 5 · Arquitectura</span>
-        <span class="slide-num">05 / 07</span>
       </header>
 
       <h1 style="font-size: 1.8rem">Diagrama de arquitectura</h1>
@@ -852,6 +685,180 @@ flowchart LR
         <strong>6 elementos:</strong>
         ① usuario+navegador · ② HTML/CSS/JS diferenciados · ③ componentes y rutas reales del repo · ④ flechas de flujo · ⑤ <code>setState → re-render</code> · ⑥ pipeline <code>local → GitHub → Vercel → URL</code>
       </p>
+    </section>
+
+    <!-- ========== SLIDE 4 — HTML/CSS/JS ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 4 · Módulo 2</span>
+        <span class="slide-num">04 / 07</span>
+      </header>
+
+      <h1>Fundamentos HTML / CSS / JS</h1>
+      <p class="lead">Cada concepto, anclado a un archivo concreto del repo.</p>
+
+      <div class="grid-2">
+        <div class="card html">
+          <h3>HTML semántico</h3>
+          <ul>
+            <li><code>&lt;header&gt;</code> + <code>&lt;nav&gt;</code> en <span class="filepath">Navbar.js</span></li>
+            <li><code>&lt;main&gt;</code> en <span class="filepath">app/layout.js:15</span></li>
+            <li><code>&lt;article&gt;</code> por producto en <span class="filepath">ProductCard.js:18</span></li>
+            <li><code>&lt;section&gt;</code> separa hero / destacados / categorías / beneficios</li>
+            <li><code>&lt;footer&gt;</code> con <code>h3/h4/ul</code> jerárquicos</li>
+          </ul>
+        </div>
+
+        <div class="card html">
+          <h3>Accesibilidad / ARIA</h3>
+          <ul>
+            <li><code>aria-label="Abrir menu"</code> + <code>aria-expanded</code> en hamburguesa</li>
+            <li><code>&lt;nav aria-label="Breadcrumb"&gt;</code> en detalle</li>
+            <li><code>aria-label</code> dinámico en cada botón "Agregar"</li>
+            <li><code>&lt;label htmlFor&gt;</code> asociado a cada input del checkout</li>
+          </ul>
+        </div>
+
+        <div class="card css">
+          <h3>Responsive · Grid + Flex</h3>
+          <ul>
+            <li>Catálogo: <strong>4 → 3 → 2 → 1</strong> col en <span class="filepath">ProductGrid.module.css</span></li>
+            <li>Carrito: <code>1fr 340px</code> → <code>1fr</code> bajo 900px</li>
+            <li>Flexbox en navbar y barra de acciones</li>
+            <li>Variables CSS en <code>:root</code> centralizan paleta</li>
+          </ul>
+        </div>
+
+        <div class="card js">
+          <h3>Eventos en JS</h3>
+          <ul>
+            <li><code>onClick</code> agregar al carrito · <span class="filepath">ProductCard.js:11</span></li>
+            <li><code>onClick</code> +/− cantidad · <span class="filepath">CartItem.js:30</span></li>
+            <li><code>onSubmit</code> + <code>preventDefault</code> · <span class="filepath">checkout/page.js:42</span></li>
+            <li><code>onChange</code> en buscador y selects de filtros</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <p class="footnote">
+        <strong>Módulos ES6:</strong> <code>export</code> / <code>import</code> con alias <code>@/*</code> en <span class="filepath">jsconfig.json</span> · una responsabilidad por archivo
+        (<code>lib/format.js</code> formatea precios, <code>context/</code> maneja estado, <code>components/</code> presenta UI).
+      </p>
+    </section>
+
+    <!-- ========== SLIDE 5 — REACT + NEXT.JS ========== -->
+    <section class="slide">
+      <header class="slide-header">
+        <span class="slide-kicker">Slide 5 · Módulo 3</span>
+        <span class="slide-num">05 / 07</span>
+      </header>
+
+      <h1>React + Next.js</h1>
+
+      <div class="grid-2">
+        <div>
+          <h3 style="color: var(--js)">Props vs State</h3>
+          <table>
+            <thead>
+              <tr><th></th><th>Props</th><th>State</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Qué</strong></td>
+                <td>Datos de afuera, <em>read-only</em></td>
+                <td>Datos internos, mutables</td>
+              </tr>
+              <tr>
+                <td><strong>Ejemplo</strong></td>
+                <td><code>&lt;ProductCard product={p} /&gt;</code> en <span class="filepath">ProductGrid.js:14</span></td>
+                <td><code>const [quantity, setQuantity] = useState(1)</code> en <span class="filepath">AddToCartButton.js:10</span></td>
+              </tr>
+              <tr>
+                <td><strong>Más</strong></td>
+                <td><code>onSortChange</code>, <code>item</code>, <code>categories</code></td>
+                <td><code>items</code> en Context, <code>open</code> del menú, <code>form</code> y <code>errors</code></td>
+              </tr>
+            </tbody>
+          </table>
+
+          <h3 style="color: var(--js)">useEffect</h3>
+          <p style="font-size: 0.92rem; margin-bottom: 0.5rem;">
+            <strong>Es un hook que ejecuta código DESPUÉS de que el componente se renderiza.</strong>
+            El array al final controla cuándo se vuelve a ejecutar:
+            <code>[]</code> = una sola vez al montar · <code>[items]</code> = cada vez que <code>items</code> cambia.
+          </p>
+          <p style="font-size: 0.88rem; margin-bottom: 0.6rem; color: var(--muted);">
+            En mi <code>CartContext</code> tengo dos: <strong>uno LEE</strong> el carrito de localStorage al cargar la página, <strong>otro ESCRIBE</strong> cada vez que el carrito cambia.
+          </p>
+          <pre style="font-size: 0.78rem; padding: 0.7rem 0.9rem; margin: 0;"><code>// 1) LEER al montar
+useEffect(() =&gt; {
+  const stored = localStorage.getItem("origen_cart");
+  if (stored) setItems(JSON.parse(stored));
+  setHydrated(true);
+}, []);
+
+// 2) ESCRIBIR cuando cambia items
+useEffect(() =&gt; {
+  if (!hydrated) return;
+  localStorage.setItem("origen_cart",
+    JSON.stringify(items));
+}, [items, hydrated]);</code></pre>
+        </div>
+
+        <div>
+          <h3 style="color: var(--accent)">Re-render — paso a paso</h3>
+          <ol style="padding-left: 1.2rem; line-height: 1.8;">
+            <li>Click en <span class="hl">"Agregar"</span> dentro de <code>ProductCard</code></li>
+            <li><code>addItem(product)</code> ejecuta <code>setItems(...)</code> en el Context</li>
+            <li>React detecta nuevo estado → <strong>re-renderiza todos los suscriptores</strong> de <code>useCart()</code>: badge del navbar, totales, items</li>
+            <li>El <code>useEffect</code> con deps <code>[items]</code> dispara → guarda en <code>localStorage</code></li>
+          </ol>
+
+          <h3 style="color: var(--accent); margin-top: 1.2rem">Rutas en Next App Router</h3>
+          <div class="routes">
+            src/app/<br>
+            ├── page.js                <span class="arrow">→</span> <span class="url">/</span><br>
+            ├── productos/<br>
+            │   ├── page.js            <span class="arrow">→</span> <span class="url">/productos</span><br>
+            │   └── <span class="dyn">[id]</span>/page.js       <span class="arrow">→</span> <span class="url">/productos/3</span><br>
+            ├── carrito/page.js        <span class="arrow">→</span> <span class="url">/carrito</span><br>
+            ├── checkout/page.js       <span class="arrow">→</span> <span class="url">/checkout</span><br>
+            └── not-found.js           <span class="arrow">→</span> <span class="url">404</span>
+          </div>
+          <p style="font-size: 0.85rem; margin-top: 0.5rem;">
+            <strong>SSG con <code>generateStaticParams()</code>:</strong> en build time Next genera una HTML estática por cada uno de los 12 productos. Las páginas no se calculan en cada visita — ya están listas en CDN.
+            <span class="filepath" style="display:block;margin-top:0.2rem">npm run build → ● (SSG) en las 12 rutas</span>
+          </p>
+
+          <h3 style="color: var(--accent); margin-top: 1.2rem">Server vs Client Components</h3>
+          <p style="font-size: 0.85rem; margin-bottom: 0.5rem;">
+            Por <strong>default todo es Server</strong> (más rápido, menos JS al cliente). Marco con <code>"use client"</code> solo lo que necesita estado, hooks o eventos.
+          </p>
+          <table style="font-size: 0.82rem">
+            <thead>
+              <tr><th>Server (default)</th><th>Client (<code>"use client"</code>)</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><code>app/layout.js</code></td>
+                <td><code>Navbar.js</code> (<code>useState</code>)</td>
+              </tr>
+              <tr>
+                <td><code>productos/[id]/page.js</code></td>
+                <td><code>AddToCartButton.js</code> (<code>onClick</code>)</td>
+              </tr>
+              <tr>
+                <td><code>productos/page.js</code> + <code>&lt;Suspense&gt;</code></td>
+                <td><code>ProductsView.js</code> (<code>useSearchParams</code>)</td>
+              </tr>
+            </tbody>
+          </table>
+          <p style="font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem;">
+            <strong><code>&lt;Suspense&gt;</code></strong> = componente de React que muestra un fallback ("Cargando...") mientras un hijo está esperando. Lo necesito porque <code>useSearchParams</code> no funciona en build time (no hay URL todavía) — Suspense le permite a Next "esperar al cliente".
+          </p>
+        </div>
+      </div>
     </section>
 
     <!-- ========== SLIDE 6 — CI/CD ========== -->
@@ -1053,8 +1060,8 @@ flowchart LR
     let current = 0;
     let mermaidRendered = false;
 
-    // Indice de la slide que contiene el diagrama Mermaid (slide 5 -> indice 4).
-    const DIAGRAM_SLIDE_INDEX = 4;
+    // Indice de la slide que contiene el diagrama Mermaid (slide 3 -> indice 2).
+    const DIAGRAM_SLIDE_INDEX = 2;
 
     async function renderDiagramIfNeeded() {
       if (mermaidRendered) return;

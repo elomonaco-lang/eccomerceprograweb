@@ -10,9 +10,9 @@
 |---|---|---|
 | 1 | Portada | 0:00 → 1:00 |
 | 2 | Recorrido por la app (screenshots) | 1:00 → 2:00 |
-| 3 | HTML / CSS / JS | 2:00 → 4:00 |
-| 4 | React + Next.js | 4:00 → 6:30 |
-| 5 | Diagrama de arquitectura | 6:30 → 8:30 |
+| 3 | Diagrama de arquitectura | 2:00 → 4:00 |
+| 4 | HTML / CSS / JS | 4:00 → 6:00 |
+| 5 | React + Next.js | 6:00 → 8:30 |
 | 6 | CI/CD | 8:30 → 9:00 |
 | 7 | Uso fundamentado de IA | 9:00 → 10:00 |
 
@@ -53,7 +53,33 @@
 
 ---
 
-## ⏱ Slide 3 — Fundamentos HTML / CSS / JS (≈ 2 min · 2:00 → 4:00)
+## ⏱ Slide 3 — Diagrama de arquitectura (≈ 2 min · 2:00 → 4:00)
+
+> **Vieron el producto. Antes de meternos en las capas técnicas, esta es la vista panorámica: cómo se conecta todo. Es la slide más importante del oral porque el rúbrica le da 12 puntos.**
+>
+> Arriba a la izquierda están **el usuario y el navegador** — el punto de entrada. Cuando alguien entra al sitio, el navegador pide a Vercel los assets de la app de Next.js.
+>
+> El frontend está organizado en tres capas, diferenciadas por colores:
+>
+> **En azul, la estructura — HTML semántico:** el `layout.js` raíz envuelve toda la app con `<html>`, `<body>` y `<main>`, y dentro viven las páginas, que son las cinco rutas reales del repo: la home, `/productos`, `/productos/[id]` que es dinámica, `/carrito` y `/checkout`.
+>
+> **En amarillo, los estilos — CSS:** un `globals.css` con variables en `:root` y clases utilitarias, más cada componente con su CSS Module de scope local — así no hay colisiones.
+>
+> **En verde, la lógica — React y JavaScript:** los componentes reutilizables (`Navbar`, `ProductCard`, `ProductGrid`, etc.), el `CartContext` que es el estado global, y `localStorage` donde persiste el carrito.
+>
+> **Siguiendo las flechas:** una página renderiza componentes, los componentes consumen el contexto vía `useCart()`, y el contexto sincroniza con localStorage.
+>
+> **La flecha punteada de Context hacia Components es clave** — representa el `setState → re-render`. Cuando hago click en agregar un producto, esa flecha se dispara y actualiza el badge del navbar y los totales del carrito en el mismo ciclo. Lo voy a explicar en detalle dos slides más adelante.
+>
+> **Y abajo, en violeta, el pipeline de deploy:** código local → `git push` → GitHub → webhook → Vercel buildea → URL pública. Lo abro en la slide 6.
+>
+> **Con esto tengo cubiertos los seis elementos que pide el diagrama: usuario y navegador, separación HTML/CSS/JS, componentes y rutas reales, flechas de flujo, re-render por state, y pipeline de deploy de punta a punta.**
+
+**Tip de transición:** *"Ahora abro cada capa con ejemplos del código real, empezando por HTML, CSS y JS."*
+
+---
+
+## ⏱ Slide 4 — Fundamentos HTML / CSS / JS (≈ 2 min · 4:00 → 6:00)
 
 > **Acá bajo cada concepto del módulo 2 a un archivo concreto del repo, así podemos verificarlo en vivo si querés.**
 >
@@ -71,51 +97,37 @@
 
 ---
 
-## ⏱ Slide 4 — React + Next.js (≈ 2:30 min · 4:00 → 6:30)
+## ⏱ Slide 5 — React + Next.js (≈ 2:30 min · 6:00 → 8:30)
 
-> **Esta es la parte más densa. Voy a ir por cuatro conceptos: props vs state, useEffect, re-render y server vs client components.**
+> **Esta es la parte más densa. Voy a explicar cuatro conceptos: props vs state, useEffect, re-render, rutas con SSG, y Server vs Client Components.**
 >
 > **Props vs state.** Un componente recibe **props** desde afuera y son inmutables — por ejemplo, `<ProductCard product={p} />` en `ProductGrid`: el grid le pasa el producto como prop, el card no lo modifica. **State** es interno y mutable — por ejemplo, en `AddToCartButton` tengo un `useState` para la cantidad seleccionada antes de agregar al carrito. Otros estados del proyecto: el array `items` dentro del Context, el booleano `open` que abre y cierra el menú móvil, el objeto `form` con los datos del checkout y el objeto `errors` con los mensajes de validación.
 >
-> **`useEffect`.** Acá el ejemplo es muy concreto: en el `CartContext` tengo **dos efectos con responsabilidades distintas**.
+> **useEffect — qué es.** *(Esta es la parte clave para defender el código que muestra la slide.)*
 >
-> El primero **corre una sola vez al montar** — su array de dependencias está vacío. Lo que hace es leer el localStorage y popular el estado del carrito. Esto es lo que permite que recargues la página y tu carrito siga ahí.
+> **`useEffect` es un hook de React que ejecuta código DESPUÉS de que el componente termina de renderizar.** Sirve para hacer cosas que están "afuera" del flujo normal de React: leer y escribir en localStorage, llamar a una API, suscribirse a eventos del navegador.
 >
-> El segundo **corre cada vez que cambia `items`**: su array de dependencias es `[items, hydrated]`. Lo que hace es escribir el estado en localStorage. Pero atención: tiene un guard `if (!hydrated) return` al principio. **Eso es para evitar un bug muy específico**: durante el primer render, antes de que el primer efecto haya leído localStorage, `items` es un array vacío. Sin el guard, el segundo efecto se dispararía con ese array vacío y **pisaría lo que estaba guardado**. Por eso uso el flag `hydrated` que se prende solo cuando ya leí.
+> Tiene dos partes: una función con el código a ejecutar, y un **array de dependencias** entre corchetes. **El array controla cuándo el efecto vuelve a correr:**
+> - Si el array está vacío `[]`, corre **una sola vez**, cuando el componente se monta.
+> - Si tiene variables `[items]`, corre cada vez que esa variable cambia.
 >
-> **Re-render.** ¿Cuándo y por qué se re-renderiza la app? Caso típico: hago click en "Agregar" dentro de un `ProductCard`. Eso llama a `addItem(product)` del Context, que ejecuta `setItems(...)`. React detecta que el estado cambió y re-renderiza **todos los componentes que están suscritos a `useCart()`**: el badge del navbar muestra un número más, los totales del carrito se recalculan, y el `useEffect` con dependencia `[items]` se dispara y guarda en localStorage. Todo en un solo ciclo de render.
+> **En mi `CartContext` tengo dos useEffects con responsabilidades opuestas:**
 >
-> **Rutas en Next App Router.** El App Router mapea **carpetas a URLs**: `app/page.js` es la home, `app/productos/page.js` es el catálogo, `app/productos/[id]/page.js` es el detalle dinámico. Y acá hay algo que vale la pena destacar: tengo `generateStaticParams()` en el detalle, que **pre-renderiza estáticamente las doce páginas de instrumentos en build time** — una HTML por cada producto del catálogo. Si corremos `npm run build` ahora, las vas a ver listadas como SSG.
+> El primero (deps `[]`) corre **una sola vez al cargar la página**: lee `localStorage` y, si hay un carrito guardado, lo carga en el estado de React. Esto es lo que permite que recargues la página y tu carrito siga ahí.
 >
-> **Server vs Client Components.** Por defecto, Next renderiza todo en el servidor. Un componente es Client solo si arriba del archivo lleva `"use client"`. **Esta decisión la tomé caso por caso:** las páginas que solo muestran datos son Server Components — más rápidas, menos JS al cliente. Los componentes que necesitan estado, hooks o eventos son Client. Por ejemplo, la página `/productos/[id]` es Server Component que se prerenderiza, pero el botón de agregar está aislado como Client en `AddToCartButton.js` — así la página queda estática y solo el botón hidrata. Mismo principio con la página de productos: la envuelvo en `<Suspense>` y la lógica de filtros vive en un Client Component aparte llamado `ProductsView`.
+> El segundo (deps `[items, hydrated]`) corre **cada vez que cambia `items`**: escribe el estado nuevo en `localStorage`. Tiene un guard `if (!hydrated) return` al principio. **Eso es para evitar un bug específico**: durante el primer render, antes de que el primer efecto haya leído localStorage, `items` es un array vacío. Sin el guard, el segundo efecto se dispararía con ese array vacío y **pisaría lo que estaba guardado**. Por eso prendo el flag `hydrated` solo después de leer; el segundo efecto espera a que esté en `true` antes de escribir.
+>
+> **Re-render — el momento clave de React.** Hago click en "Agregar" dentro de un `ProductCard`. Eso llama a `addItem(product)` del Context, que ejecuta `setItems(...)`. React detecta que el estado cambió y re-renderiza **todos los componentes que están suscritos a `useCart()`**: el badge del navbar muestra un número más, los totales del carrito se recalculan, y el `useEffect` con dependencia `[items]` se dispara y guarda en localStorage. Todo en un solo ciclo.
+>
+> **Rutas en Next App Router con SSG.** El App Router mapea **carpetas a URLs**: `app/page.js` es la home, `app/productos/page.js` es el catálogo, `app/productos/[id]/page.js` es el detalle dinámico.
+>
+> Acá uso una técnica que se llama **SSG — Static Site Generation**: con la función `generateStaticParams()` le digo a Next "para esta ruta dinámica, generá una página HTML estática por cada uno de estos IDs". Mi función devuelve los 12 IDs de productos. **Resultado: en build time, Next escribe 12 archivos HTML — uno por instrumento — y los sirve desde CDN.** No se calculan en cada request; ya están listos. Cuando corro `npm run build`, las veo listadas con un punto sólido `●` indicando SSG.
+>
+> **Server vs Client Components.** Por defecto, Next renderiza todo en el servidor (más rápido, menos JS al cliente). Un componente se vuelve Client solo si arriba del archivo escribo `"use client"`. **Esta decisión la tomé caso por caso:** las páginas que solo muestran datos son Server Components. Los componentes que necesitan estado, hooks o eventos son Client. Por ejemplo, la página `/productos/[id]` es Server Component que se prerenderiza, pero el botón de agregar está aislado como Client en `AddToCartButton.js` — así la página queda estática y solo el botón hidrata.
+>
+> **`<Suspense>` — qué es.** Es un componente de React que muestra un **fallback** ("Cargando…") mientras un hijo está esperando algo. En la página `/productos`, uso `useSearchParams` para leer la categoría desde la URL. Pero `useSearchParams` no funciona en build time — ahí no hay URL todavía. La solución es envolver la lógica en `<Suspense>`: durante el prerender, Next muestra el fallback; cuando el cliente carga, hidrata y aparece el contenido real.
 
 **Tip:** este es el slide donde más fácil te interrumpen. Si te preguntan algo en el medio, respondé y volvé al hilo. No te apures pasando.
-
----
-
-## ⏱ Slide 5 — Diagrama de arquitectura (≈ 2 min · 6:30 → 8:30)
-
-> **Vimos las pantallas, vimos el HTML/CSS, vimos el modelo de React/Next. Ahora todo eso se conecta en una sola vista. Esta slide es la que vale 12 puntos del rúbrica.**
->
-> Arriba a la izquierda están **el usuario y el navegador** — el punto de entrada. Cuando el usuario entra al sitio, el navegador pide a Vercel los assets de la app de Next.js.
->
-> El frontend está organizado en tres capas, que las diferencié con colores en el diagrama:
->
-> **En azul, la estructura — HTML semántico:** el `layout.js` raíz envuelve toda la app con `<html>`, `<body>` y `<main>`, y dentro viven las páginas, que son las cinco rutas reales del repo: la home, `/productos`, `/productos/[id]` que es dinámica, `/carrito` y `/checkout`.
->
-> **En amarillo, los estilos — CSS:** un `globals.css` con variables en `:root` y clases utilitarias, más cada componente con su CSS Module de scope local — así no hay colisiones.
->
-> **En verde, la lógica — React y JavaScript:** los componentes reutilizables (`Navbar`, `ProductCard`, `ProductGrid`, etc.), el `CartContext` que es el estado global, y `localStorage` donde persiste el carrito.
->
-> **Siguiendo las flechas:** una página renderiza componentes, los componentes consumen el contexto vía `useCart()`, y el contexto sincroniza con localStorage.
->
-> **La flecha punteada de Context hacia Components es clave** — representa el `setState → re-render` que les expliqué hace dos minutos. Cuando hago click en agregar, esa flecha se dispara y actualiza el badge del navbar y los totales del carrito en el mismo ciclo.
->
-> **Y abajo, en violeta, el pipeline de deploy:** código local → `git push` → GitHub → webhook → Vercel buildea → URL pública. Eso lo vamos a ver con más detalle en la próxima slide.
->
-> **Con esto tengo cubiertos los seis elementos que pide el diagrama: usuario y navegador, separación HTML/CSS/JS, componentes y rutas reales del repo, flechas de flujo, re-render por state, y pipeline de deploy de punta a punta.**
-
-**Tip de transición:** acá es donde podés cerrar diciendo *"el pipeline lo abrimos en la próxima"*. Si el profe quiere preguntar algo del diagrama, respondé y avanzá.
 
 ---
 
