@@ -12,17 +12,17 @@ export function getSupabaseBrowserClient() {
   if (browserClient) return browserClient;
 
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-  const anonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
 
-  if (!url || !anonKey) return null;
+  if (!url || !key) return null;
 
-  browserClient = createClient(url, anonKey);
+  browserClient = createClient(url, key);
   return browserClient;
 }
 
 export function isSupabaseConfigured() {
   return !!(
     process.env.NEXT_PUBLIC_SUPABASE_URL &&
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   );
 }
