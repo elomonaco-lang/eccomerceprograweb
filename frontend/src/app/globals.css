@@ -1,27 +1,59 @@
-/* Reset basico y variables de diseno
-   Paleta inspirada en cafe: crema, espresso oscuro, caramelo. */
+/* ===== GOOGLE FONTS ===== */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,800;1,400;1,700&family=Inter:wght@300;400;500;600;700&display=swap');
+
+/* ===== DESIGN TOKENS ===== */
 :root {
-  --color-bg: #faf6f0;
+  /* Brand palette — premium dark espresso + warm amber accent */
+  --color-bg: #faf8f5;
   --color-surface: #ffffff;
-  --color-border: #e8dfd3;
-  --color-text: #2c1810;
-  --color-text-muted: #7a6b5d;
-  --color-primary: #3e2723;
-  --color-primary-hover: #5d4037;
-  --color-accent: #b87333;
-  --color-accent-hover: #9a5f29;
-  --color-success: #2f7a4a;
-  --color-danger: #b54343;
-  --shadow-sm: 0 1px 2px rgba(62, 39, 35, 0.06);
-  --shadow-md: 0 4px 14px rgba(62, 39, 35, 0.10);
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
+  --color-surface-2: #f5f1eb;
+  --color-border: #e8e0d5;
+  --color-border-strong: #c8bfb3;
+
+  --color-text: #1c1208;
+  --color-text-muted: #7a6e62;
+  --color-text-light: #a69d93;
+
+  --color-primary: #2a1a0e;
+  --color-primary-hover: #3d2a1a;
+
+  --color-accent: #c0832a;
+  --color-accent-hover: #a36b1e;
+  --color-accent-soft: #faf0e0;
+  --color-accent-mid: #e8c08a;
+
+  --color-success: #2d6a4f;
+  --color-danger: #b91c1c;
+
+  /* Shadows */
+  --shadow-xs: 0 1px 2px rgba(42, 26, 14, 0.05);
+  --shadow-sm: 0 2px 6px rgba(42, 26, 14, 0.08);
+  --shadow-md: 0 6px 20px rgba(42, 26, 14, 0.12);
+  --shadow-lg: 0 16px 48px rgba(42, 26, 14, 0.16);
+
+  /* Radii */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-xl: 24px;
+
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  /* Layout */
   --max-width: 1200px;
-  --header-height: 64px;
+  --header-height: 68px;
+
+  /* Transitions */
+  --ease: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-* {
+/* ===== RESET ===== */
+*,
+*::before,
+*::after {
   box-sizing: border-box;
 }
 
@@ -31,11 +63,12 @@ body {
   padding: 0;
   background: var(--color-bg);
   color: var(--color-text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
-    Ubuntu, Cantarell, "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-body);
   font-size: 16px;
-  line-height: 1.5;
+  line-height: 1.6;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -65,37 +98,48 @@ textarea {
   font-size: 1rem;
 }
 
-h1,
-h2,
-h3,
-h4 {
+h1, h2, h3, h4 {
   margin: 0 0 0.5em 0;
   line-height: 1.2;
   color: var(--color-primary);
+  font-family: var(--font-display);
 }
 
 p {
   margin: 0 0 1em 0;
 }
 
+/* ===== LAYOUT ===== */
 .container {
   width: 100%;
   max-width: var(--max-width);
   margin: 0 auto;
-  padding: 0 1.25rem;
+  padding: 0 1.5rem;
 }
 
+main {
+  flex: 1;
+}
+
+/* ===== BUTTONS ===== */
 .btn {
-  display: inline-block;
-  padding: 0.7rem 1.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.5rem;
   border-radius: var(--radius-sm);
   border: none;
   background: var(--color-primary);
   color: white;
+  font-family: var(--font-body);
   font-weight: 600;
-  font-size: 0.95rem;
-  transition: background 0.2s ease, transform 0.05s ease;
+  font-size: 0.9rem;
+  letter-spacing: 0.01em;
+  transition: background 0.2s var(--ease), transform 0.1s, box-shadow 0.2s;
   text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
 }
 
 .btn:hover {
@@ -108,6 +152,7 @@ p {
 
 .btn-accent {
   background: var(--color-accent);
+  color: white;
 }
 
 .btn-accent:hover {
@@ -117,50 +162,54 @@ p {
 .btn-outline {
   background: transparent;
   color: var(--color-primary);
-  border: 1px solid var(--color-border);
+  border: 1.5px solid var(--color-border-strong);
 }
 
 .btn-outline:hover {
-  background: var(--color-bg);
+  background: var(--color-surface-2);
+  border-color: var(--color-primary);
 }
 
 .btn-danger {
   background: var(--color-danger);
+  color: white;
 }
 
 .btn-danger:hover {
-  background: #b91c1c;
+  background: #991b1b;
 }
 
 .btn-block {
-  display: block;
+  display: flex;
   width: 100%;
 }
 
+/* ===== SECTIONS ===== */
 .section {
-  padding: 3rem 0;
+  padding: 4rem 0;
 }
 
 .section-title {
-  font-size: 1.6rem;
+  font-family: var(--font-display);
+  font-size: 2rem;
   margin-bottom: 1.5rem;
+  color: var(--color-primary);
 }
 
+/* ===== UTILITIES ===== */
 .text-muted {
   color: var(--color-text-muted);
 }
 
-main {
-  flex: 1;
-  padding-top: 1.5rem;
-  padding-bottom: 2rem;
-}
-
+/* ===== RESPONSIVE ===== */
 @media (max-width: 600px) {
   .section {
-    padding: 2rem 0;
+    padding: 2.5rem 0;
   }
   .section-title {
-    font-size: 1.35rem;
+    font-size: 1.6rem;
+  }
+  .container {
+    padding: 0 1rem;
   }
 }

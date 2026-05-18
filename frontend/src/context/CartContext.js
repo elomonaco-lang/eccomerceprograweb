@@ -1,33 +1,42 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import { useAuth } from "@/context/AuthContext";
 
 const CartContext = createContext(null);
 
-const STORAGE_KEY = "musictrack_cart";
+const GUEST_KEY = "musictrack_cart_guest";
+function storageKeyFor(userId) {
+  return userId ? `musictrack_cart_user_${userId}` : GUEST_KEY;
+}
 
 export function CartProvider({ children }) {
+  const { user, loading: authLoading } = useAuth();
   const [items, setItems] = useState([]);
   const [hydrated, setHydrated] = useState(false);
+  const [currentKey, setCurrentKey] = useState(null);
 
-  // Cargar el carrito desde localStorage al montar.
+  // Cargar / cambiar carrito cuando cambia el usuario.
+  // Cada usuario tiene su propio carrito en localStorage; el guest tiene el suyo.
+  // Así un usuario nunca ve el carrito de otro aunque compartan el navegador.
   useEffect(() => {
+    if (authLoading) return;
+    const key = storageKeyFor(user?.id);
     try {
-      const stored = window.localStorage.getItem(STORAGE_KEY);
-      if (stored) {
-        setItems(JSON.parse(stored));
-      }
-    } catch (e) {
-      // Si hay un error de parseo simplemente arrancamos con carrito vacio.
+      const stored = window.localStorage.getItem(key);
+      setItems(stored ? JSON.parse(stored) : []);
+    } catch {
+      setItems([]);
     }
+    setCurrentKey(key);
     setHydrated(true);
-  }, []);
+  }, [user?.id, authLoading]);
 
-  // Persistir cambios en localStorage.
+  // Persistir cambios en el slot del usuario actual.
   useEffect(() => {
-    if (!hydrated) return;
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-  }, [items, hydrated]);
+    if (!hydrated || !currentKey) return;
+    window.localStorage.setItem(currentKey, JSON.stringify(items));
+  }, [items, hydrated, currentKey]);
 
   function addItem(product, quantity = 1) {
     setItems((current) => {

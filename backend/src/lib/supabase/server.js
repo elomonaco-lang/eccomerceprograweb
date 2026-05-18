@@ -27,3 +27,17 @@ export function isSupabaseConfigured() {
     process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY
   );
 }
+
+// Cliente por-request que hereda la sesión del usuario via Authorization: Bearer.
+// Necesario para que auth.uid() funcione dentro de funciones SECURITY DEFINER
+// (la función checkout() depende de auth.uid()).
+export function getSupabaseUserClient(accessToken) {
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY;
+  if (!url || !key || !accessToken) return null;
+
+  return createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+    global: { headers: { Authorization: `Bearer ${accessToken}` } },
+  });
+}

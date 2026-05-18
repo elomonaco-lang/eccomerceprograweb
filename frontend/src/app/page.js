@@ -1,101 +1,91 @@
 import Link from "next/link";
 import ProductGrid from "@/components/ProductGrid";
-import ProductImage from "@/components/ProductImage";
+import HeroSlider from "@/components/HeroSlider";
 import { fetchAllProducts, fetchAllCategories } from "@/lib/api";
 import styles from "./page.module.css";
 
-// Imagen representativa por categoria — usamos un producto de cada una.
-const categoryVisuals = {
-  Electricas: { image: "/products/stratocaster.jpg", icon: "🎸" },
-  Acusticas: { image: "/products/folk.jpg", icon: "🪕" },
-  Bajos: { image: "/products/jazzbass.jpg", icon: "🎵" },
-  Accesorios: { image: "/products/amplificador.jpg", icon: "🔊" },
+const categoryMeta = {
+  Electricas: {
+    image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?w=600&q=75&auto=format&fit=crop",
+    icon: "🎸",
+    desc: "Stratocasters, Les Pauls y más",
+  },
+  Acusticas: {
+    image: "https://images.unsplash.com/photo-1525201548942-d8732f6617a0?w=600&q=75&auto=format&fit=crop",
+    icon: "🪕",
+    desc: "Folk, dreadnought y clásicas",
+  },
+  Bajos: {
+    image: "https://images.unsplash.com/photo-1564186763535-ebb21ef5277f?w=600&q=75&auto=format&fit=crop",
+    icon: "🎵",
+    desc: "Jazz Bass, Precision y más",
+  },
+  Accesorios: {
+    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&q=75&auto=format&fit=crop",
+    icon: "🔊",
+    desc: "Amplificadores, cuerdas y más",
+  },
 };
 
+const benefits = [
+  {
+    title: "Probadas y seteadas",
+    description:
+      "Cada instrumento se prueba, afina y setea antes de salir del local.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M9 12l2 2 4-4" />
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    ),
+  },
+  {
+    title: "Envío en 24/48h",
+    description: "Despachamos con embalaje reforzado a todo el país.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="1" y="3" width="15" height="13" /><polygon points="16 8 20 8 23 11 23 16 16 16 16 8" /><circle cx="5.5" cy="18.5" r="2.5" /><circle cx="18.5" cy="18.5" r="2.5" />
+      </svg>
+    ),
+  },
+  {
+    title: "Garantía oficial",
+    description: "Todos los productos con garantía de fábrica y soporte técnico.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Asesoramiento",
+    description: "Te ayudamos a elegir el instrumento ideal para tu nivel.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+      </svg>
+    ),
+  },
+];
+
 export default async function HomePage() {
-  // Server Component: leemos productos y categorias desde la capa de datos
-  // (Supabase si esta configurado, mock como fallback).
   const products = await fetchAllProducts();
   const categories = await fetchAllCategories();
   const featured = products.slice(0, 4);
 
-  const benefits = [
-    {
-      title: "Probadas y testeadas",
-      description: "Cada instrumento se prueba y se setea antes de salir del local.",
-      icon: "🎸",
-    },
-    {
-      title: "Envio rapido",
-      description: "Despachamos en 24/48 horas con embalaje reforzado a todo el pais.",
-      icon: "🚚",
-    },
-    {
-      title: "Garantia oficial",
-      description: "Todos los productos con garantia de fabrica y soporte tecnico.",
-      icon: "🛡️",
-    },
-    {
-      title: "Asesoramiento",
-      description: "Te ayudamos a elegir el instrumento adecuado para tu nivel.",
-      icon: "💬",
-    },
-  ];
-
   return (
     <>
-      <section className={styles.hero}>
-        <div className={`container ${styles.heroInner}`}>
-          <div className={styles.heroText}>
-            <span className={styles.kicker}>Instrumentos musicales</span>
-            <h1 className={styles.heroTitle}>
-              Donde nace tu <span className={styles.heroAccent}>sonido</span>
-            </h1>
-            <p className={styles.heroSubtitle}>
-              Guitarras electricas, acusticas, bajos y accesorios. Marcas
-              seleccionadas para principiantes y profesionales. Envio a todo el
-              pais y asesoramiento personalizado.
-            </p>
-            <div className={styles.heroActions}>
-              <Link href="/productos" className="btn btn-accent">
-                Ver instrumentos
-              </Link>
-              <Link href="#beneficios" className="btn btn-outline">
-                Conocer mas
-              </Link>
-            </div>
-          </div>
+      <HeroSlider />
 
-          <div className={styles.heroGrid} aria-hidden="true">
-            <div className={`${styles.heroCell} ${styles.heroCellMain}`}>
-              <ProductImage src="/products/stratocaster.jpg" alt="Stratocaster" />
-              <span className={styles.heroBadge}>Eléctricas</span>
-            </div>
-            <div className={styles.heroCell}>
-              <ProductImage src="/products/folk.jpg" alt="Acústica folk" />
-              <span className={styles.heroBadge}>Acústicas</span>
-            </div>
-            <div className={styles.heroCell}>
-              <ProductImage src="/products/jazzbass.jpg" alt="Bajo Jazz" />
-              <span className={styles.heroBadge}>Bajos</span>
-            </div>
-            <div className={styles.heroCell}>
-              <ProductImage src="/products/amplificador.jpg" alt="Amplificador" />
-              <span className={styles.heroBadge}>Accesorios</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Banda de stats — entre hero y destacados */}
+      {/* Stats bar */}
       <section className={styles.stats}>
         <div className={`container ${styles.statsInner}`}>
           <div className={styles.statItem}>
-            <strong>12</strong>
+            <strong>{products.length || 12}</strong>
             <span>instrumentos</span>
           </div>
           <div className={styles.statItem}>
-            <strong>4</strong>
+            <strong>{categories.length || 4}</strong>
             <span>categorías</span>
           </div>
           <div className={styles.statItem}>
@@ -109,10 +99,14 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Featured products */}
       <section className="section">
         <div className="container">
           <div className={styles.sectionHead}>
-            <h2 className="section-title">Productos destacados</h2>
+            <div>
+              <p className={styles.sectionKicker}>Lo más popular</p>
+              <h2 className="section-title">Productos destacados</h2>
+            </div>
             <Link href="/productos" className={styles.linkMore}>
               Ver todos →
             </Link>
@@ -121,32 +115,31 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="section">
+      {/* Categories */}
+      <section className={`section ${styles.categoriesSection}`}>
         <div className="container">
+          <p className={styles.sectionKicker}>Explorá por tipo</p>
           <h2 className="section-title">Categorías</h2>
-          <p className={styles.sectionLead}>
-            Encontrá tu instrumento ideal navegando por categoría.
-          </p>
           <div className={styles.categories}>
             {categories.map((cat) => {
-              const visual = categoryVisuals[cat] || {};
+              const meta = categoryMeta[cat] || { icon: "🎵", desc: "" };
               return (
                 <Link
                   key={cat}
                   href={`/productos?categoria=${encodeURIComponent(cat)}`}
                   className={styles.categoryCard}
                 >
-                  <div className={styles.categoryImg} aria-hidden="true">
-                    {visual.image && (
-                      <ProductImage src={visual.image} alt="" />
+                  <div className={styles.categoryImg}>
+                    {meta.image && (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={meta.image} alt="" loading="lazy" />
                     )}
-                    <div className={styles.categoryOverlay}></div>
+                    <div className={styles.categoryOverlay} />
                   </div>
                   <div className={styles.categoryContent}>
-                    <span className={styles.categoryIcon} aria-hidden="true">
-                      {visual.icon || "🎵"}
-                    </span>
+                    <span className={styles.categoryIcon}>{meta.icon}</span>
                     <span className={styles.categoryName}>{cat}</span>
+                    <span className={styles.categoryDesc}>{meta.desc}</span>
                   </div>
                 </Link>
               );
@@ -155,20 +148,35 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* Benefits */}
       <section className="section" id="beneficios">
         <div className="container">
+          <p className={styles.sectionKicker}>Nuestra promesa</p>
           <h2 className="section-title">Por qué elegirnos</h2>
           <div className={styles.benefits}>
             {benefits.map((b) => (
               <div key={b.title} className={styles.benefit}>
-                <div className={styles.benefitIcon} aria-hidden="true">
-                  {b.icon}
-                </div>
+                <div className={styles.benefitIcon}>{b.icon}</div>
                 <h3 className={styles.benefitTitle}>{b.title}</h3>
                 <p className={styles.benefitDesc}>{b.description}</p>
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* CTA band */}
+      <section className={styles.ctaBand}>
+        <div className={`container ${styles.ctaBandInner}`}>
+          <div>
+            <h2 className={styles.ctaTitle}>¿No sabés qué instrumento elegir?</h2>
+            <p className={styles.ctaSubtitle}>
+              Nuestro equipo te asesora sin costo para encontrar el instrumento perfecto para tu estilo y nivel.
+            </p>
+          </div>
+          <Link href="/productos" className="btn btn-accent">
+            Explorar catálogo
+          </Link>
         </div>
       </section>
     </>

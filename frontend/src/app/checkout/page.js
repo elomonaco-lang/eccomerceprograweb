@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { createClient } from "@/lib/supabase/client";
 import { formatPrice } from "@/lib/format";
-import { postOrder } from "@/lib/api";
+import { postOrder, createMpPreference } from "@/lib/api";
 import styles from "./page.module.css";
 
 const initialForm = {
@@ -17,11 +20,32 @@ const initialForm = {
 
 export default function CheckoutPage() {
   const { items, totalPrice, totalItems, clearCart, hydrated } = useCart();
+  const { user, profile, loading: authLoading } = useAuth();
+  const router = useRouter();
   const [form, setForm] = useState(initialForm);
+
+  // Si no hay sesión, redirigir a login con ?next=/checkout.
+  useEffect(() => {
+    if (!authLoading && !user) {
+      router.replace("/login?next=/checkout");
+    }
+  }, [authLoading, user, router]);
+
+  // Prefill con datos del perfil cuando se carga el user.
+  useEffect(() => {
+    if (user) {
+      setForm((f) => ({
+        ...f,
+        name: f.name || profile?.name || user.user_metadata?.full_name || "",
+        email: f.email || user.email || "",
+      }));
+    }
+  }, [user, profile]);
   const [errors, setErrors] = useState({});
   const [confirmed, setConfirmed] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("mercadopago");
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -54,41 +78,72 @@ export default function CheckoutPage() {
     setSubmitting(true);
     setSubmitError("");
 
+    const customer = {
+      name: form.name,
+      email: form.email,
+      phone: form.phone,
+      address: form.address,
+      comments: form.comments,
+    };
+    const cartItems = items.map((it) => ({
+      id: it.id,
+      name: it.name,
+      price: it.price,
+      quantity: it.quantity,
+    }));
+
     try {
-      const { orderId } = await postOrder({
-        customer: {
-          name: form.name,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          comments: form.comments,
-        },
-        items: items.map((it) => ({
-          id: it.id,
-          name: it.name,
-          price: it.price,
-          quantity: it.quantity,
-        })),
-        total: totalPrice,
+      // Obtener el access token actual de Supabase para autenticar al server.
+      const supabase = createClient();
+      const { data: { session } } = await supabase.auth.getSession();
+      const accessToken = session?.access_token;
+      if (!accessToken) {
+        router.replace("/login?next=/checkout");
+        return;
+      }
+
+      if (paymentMethod === "mercadopago") {
+        // Crear preferencia en el backend y redirigir a Checkout Pro.
+        // El backend ya crea la orden internamente; no llamamos a postOrder.
+        const { initPoint, sandboxInitPoint } = await createMpPreference({
+          customer,
+          items: cartItems,
+        });
+        clearCart();
+        // En sandbox MP devuelve ambas URLs; preferimos sandbox si está.
+        window.location.href = sandboxInitPoint || initPoint;
+        return;
+      }
+
+      // Método "manual" / efectivo: flujo atómico con validación de stock.
+      // El server valida auth + stock + recalcula total contra la BD.
+      const { orderId, total: serverTotal } = await postOrder({
+        customer,
+        items: cartItems,
+        accessToken,
       });
 
       setConfirmed({
         id: orderId,
         name: form.name,
         email: form.email,
-        total: totalPrice,
+        total: serverTotal ?? totalPrice,
         items: totalItems,
       });
       clearCart();
       setForm(initialForm);
     } catch (err) {
+      if (err.code === "AUTH_REQUIRED") {
+        router.replace("/login?next=/checkout");
+        return;
+      }
       setSubmitError(err.message || "Error al confirmar la orden.");
     } finally {
       setSubmitting(false);
     }
   }
 
-  if (!hydrated) {
+  if (!hydrated || authLoading || !user) {
     return (
       <div className="container">
         <p className="text-muted">Cargando...</p>
@@ -238,6 +293,55 @@ export default function CheckoutPage() {
             />
           </div>
 
+          <h2 className={styles.formTitle} style={{ marginTop: "1.5rem" }}>
+            Medio de pago
+          </h2>
+          <div className={styles.field}>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                cursor: "pointer",
+              }}
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="mercadopago"
+                checked={paymentMethod === "mercadopago"}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+              <span>
+                <strong>Mercado Pago</strong>{" "}
+                <span className="text-muted">
+                  (tarjeta, débito, dinero en cuenta)
+                </span>
+              </span>
+            </label>
+            <label
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.5rem",
+                cursor: "pointer",
+                marginTop: "0.5rem",
+              }}
+            >
+              <input
+                type="radio"
+                name="paymentMethod"
+                value="manual"
+                checked={paymentMethod === "manual"}
+                onChange={(e) => setPaymentMethod(e.target.value)}
+              />
+              <span>
+                <strong>Coordinar al recibir</strong>{" "}
+                <span className="text-muted">(efectivo / transferencia)</span>
+              </span>
+            </label>
+          </div>
+
           {submitError && (
             <p className={styles.error} role="alert">
               {submitError}
@@ -250,7 +354,11 @@ export default function CheckoutPage() {
             style={{ marginTop: "0.5rem" }}
             disabled={submitting}
           >
-            {submitting ? "Procesando..." : "Confirmar pedido"}
+            {submitting
+              ? "Procesando..."
+              : paymentMethod === "mercadopago"
+                ? "Pagar con Mercado Pago"
+                : "Confirmar pedido"}
           </button>
         </form>
 

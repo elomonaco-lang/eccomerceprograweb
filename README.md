@@ -115,11 +115,91 @@ Cada `git push` redeploya ambos automáticamente (o solo uno si Vercel detecta q
 
 Supabase es totalmente gestionado: el "deploy" es ejecutar las migraciones y el seed desde el SQL Editor. No requiere infraestructura propia.
 
+## Mercado Pago (Checkout Pro)
+
+El checkout permite pagar con **Mercado Pago** además del flujo manual.
+Se usa **Checkout Pro** (redirect a `init_point`) en vez de Bricks porque
+el frontend usa CSS Modules sin dependencias de UI y el redirect deja
+**cero** lógica de pago del lado cliente.
+
+### 1) Migración de BD
+
+```bash
+# En SQL Editor de Supabase, correr:
+backend/supabase/migrations/002_mercadopago.sql
+```
+
+Agrega: `payment_provider`, `payment_id` (UNIQUE para idempotencia),
+`payment_status`, `payment_raw_response`, `payment_preference_id`.
+
+### 2) Variables de entorno (backend)
+
+En `backend/.env.local`:
+
+```env
+MP_ACCESS_TOKEN=TEST-xxxxx       # Sandbox: empieza con TEST-
+MP_PUBLIC_KEY=TEST-xxxxx         # Sólo si en el futuro usamos Bricks
+MP_WEBHOOK_SECRET=xxxxx          # Dashboard MP → Webhooks → Clave secreta
+FRONTEND_URL=http://localhost:3000
+BACKEND_PUBLIC_URL=http://localhost:3001
+```
+
+> ⚠️ En dev local, MP necesita una URL pública para enviar webhooks.
+> Usar [ngrok](https://ngrok.com/) o `cloudflared tunnel` apuntando al 3001
+> y poner esa URL en `BACKEND_PUBLIC_URL`.
+
+### 3) Endpoints
+
+| Método | Ruta | Qué hace |
+|---|---|---|
+| `POST` | `/api/payments/mercadopago/create-preference` | Valida items contra DB, crea orden + preference, devuelve `initPoint`. |
+| `POST` | `/api/payments/mercadopago/webhook` | Valida firma `x-signature`, re-consulta el pago a MP y actualiza la orden (idempotente). |
+| `GET` | `/api/orders/:orderCode` | Estado real de la orden (usado por las páginas de retorno). |
+
+### 4) Flujo
+
+1. Usuario completa el checkout y elige *Mercado Pago* → POST a `create-preference`.
+2. Backend valida stock/precios, crea la orden `pending` y obtiene `initPoint`.
+3. Frontend redirige a `initPoint` (Checkout Pro).
+4. MP redirige al usuario a `/checkout/success|failure|pending`.
+5. Esas páginas **no confían en query params** — consultan `/api/orders/:code`.
+6. MP envía webhook en paralelo → backend re-consulta el pago y actualiza la orden.
+
+### 5) Tarjetas de prueba (sandbox Argentina)
+
+Usuario de prueba: ver [docs MP](https://www.mercadopago.com.ar/developers/es/docs/checkout-pro/test-integration).
+
+| Resultado | Número | CVV | Vencimiento | Titular |
+|---|---|---|---|---|
+| **APRO** (aprobado) | `5031 7557 3453 0604` | `123` | `11/30` | `APRO` |
+| **OTHE** (rechazado por error general) | igual | igual | igual | `OTHE` |
+| **CONT** (pendiente) | igual | igual | igual | `CONT` |
+| **CALL** (rechazado por autorización) | igual | igual | igual | `CALL` |
+| **FUND** (sin fondos) | igual | igual | igual | `FUND` |
+
+DNI: `12345678`. El nombre del titular **es** el switch del resultado.
+
+### 6) Tests
+
+```bash
+cd backend
+npm test          # smoke tests de firma + mapper de estados
+```
+
+El test de integración contra el sandbox de MP corre sólo si está
+`MP_ACCESS_TOKEN` en el entorno.
+
+## TODOs pendientes
+
+- Decremento de stock en webhook tras `approved`.
+- Email de confirmación al cliente.
+- Mover efectos post-pago a una cola si crecen (BullMQ / Inngest / pg_cron).
+- Opción de Bricks (checkout embebido) si se quiere evitar el redirect.
+
 ## Próximos pasos (módulos siguientes)
 
 - **S11 · Auth**: Supabase Auth + completar `profiles` con trigger.
 - **S12 · Admin panel**: rutas server-only para gestionar productos y órdenes.
-- **S13–S15 · Mercado Pago**: checkout real + webhook que actualiza `orders.status`.
 
 ## Materiales del oral
 

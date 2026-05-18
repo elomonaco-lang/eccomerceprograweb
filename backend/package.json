@@ -9,11 +9,13 @@
     "start": "next start -p 3001",
     "lint": "next lint",
     "db:print:init": "cat supabase/migrations/001_init.sql",
-    "db:print:seed": "cat supabase/seed.sql"
+    "db:print:seed": "cat supabase/seed.sql",
+    "test": "node --test __tests__"
   },
   "dependencies": {
     "@supabase/ssr": "^0.10.2",
     "@supabase/supabase-js": "^2.105.3",
+    "mercadopago": "^2.12.1",
     "next": "^14.2.35",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"
