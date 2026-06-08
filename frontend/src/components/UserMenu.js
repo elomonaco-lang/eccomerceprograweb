@@ -38,7 +38,8 @@ export default function UserMenu() {
 
   const displayName = profile?.name || user.email?.split("@")[0] || "Usuario";
   const avatarUrl = user.user_metadata?.avatar_url;
-  const isAdmin = profile?.role === "admin";
+  const isAdmin = profile?.role === "admin" || profile?.role === "dev";
+  const isDev = profile?.role === "dev";
 
   return (
     <div className={styles.wrapper} ref={ref}>
@@ -75,7 +76,9 @@ export default function UserMenu() {
         <div className={styles.dropdown}>
           <div className={styles.dropdownHeader}>
             <p className={styles.dropdownEmail}>{user.email}</p>
-            {isAdmin && <span className={styles.adminBadge}>Admin</span>}
+            {isAdmin && (
+              <span className={styles.adminBadge}>{isDev ? "Dueño" : "Admin"}</span>
+            )}
           </div>
           <div className={styles.dropdownDivider} />
           <Link href="/perfil" className={styles.dropdownItem} onClick={() => setOpen(false)}>

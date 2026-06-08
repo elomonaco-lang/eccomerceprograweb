@@ -6,9 +6,17 @@
 
 import {
   getSupabaseServerClient,
+  getSupabaseAdminClient,
   getSupabaseUserClient,
   isSupabaseConfigured,
 } from "@/lib/supabase/server";
+
+// Helper interno: usa service_role si está configurado, sino anon (fallback).
+// Las funciones de orders necesitan bypass de RLS porque ya validamos los
+// items contra products (anti-tampering) antes de insertar.
+function getOrdersClient() {
+  return getSupabaseAdminClient() || getSupabaseServerClient();
+}
 
 /**
  * Flujo completo de compra en una sola transacción Postgres.
@@ -95,7 +103,9 @@ export async function createOrder({ customer, items, total }) {
     return { orderId: orderCode, persisted: false };
   }
 
-  const supabase = getSupabaseServerClient();
+  // service_role: bypassea RLS. Ya validamos los items contra products en
+  // validateOrderItemsAgainstDb() antes de llegar acá.
+  const supabase = getOrdersClient();
 
   // 1) Insertar la orden y traer su id real
   const { data: order, error: orderError } = await supabase
@@ -147,7 +157,7 @@ export async function createOrder({ customer, items, total }) {
  */
 export async function getOrderByCode(orderCode) {
   if (!isSupabaseConfigured()) return null;
-  const supabase = getSupabaseServerClient();
+  const supabase = getOrdersClient();
 
   const { data: order, error } = await supabase
     .from("orders")
@@ -227,7 +237,7 @@ export async function updateOrderPayment({
   if (!isSupabaseConfigured()) {
     return { updated: false, alreadyProcessed: false };
   }
-  const supabase = getSupabaseServerClient();
+  const supabase = getOrdersClient();
 
   const { data: existing } = await supabase
     .from("orders")

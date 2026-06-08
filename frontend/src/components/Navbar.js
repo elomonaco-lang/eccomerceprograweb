@@ -10,7 +10,7 @@ import styles from "./Navbar.module.css";
 export default function Navbar() {
   const { totalItems, hydrated } = useCart();
   const { profile } = useAuth();
-  const isAdmin = profile?.role === "admin";
+  const isAdmin = profile?.role === "admin" || profile?.role === "dev";
   const [open, setOpen] = useState(false);
 
   function closeMenu() {

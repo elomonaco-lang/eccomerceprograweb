@@ -28,6 +28,25 @@ export function isSupabaseConfigured() {
   );
 }
 
+// Cliente admin (bypass RLS) usando service_role.
+// Usar SÓLO en endpoints del backend para flujos trusted donde la validación
+// se hace en código (ej. createOrder valida items contra products antes de
+// insertar). NUNCA exponer el service_role al cliente.
+let adminClient = null;
+
+export function getSupabaseAdminClient() {
+  if (adminClient) return adminClient;
+
+  const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) return null;
+
+  adminClient = createClient(url, key, {
+    auth: { persistSession: false, autoRefreshToken: false },
+  });
+  return adminClient;
+}
+
 // Cliente por-request que hereda la sesión del usuario via Authorization: Bearer.
 // Necesario para que auth.uid() funcione dentro de funciones SECURITY DEFINER
 // (la función checkout() depende de auth.uid()).
