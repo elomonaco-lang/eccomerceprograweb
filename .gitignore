@@ -18,6 +18,9 @@
 **/.env
 **/.env*.local
 
+# MCP server config — contiene PAT de Supabase
+.mcp.json
+
 # Vercel
 **/.vercel
 

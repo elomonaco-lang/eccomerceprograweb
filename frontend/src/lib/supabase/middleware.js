@@ -37,7 +37,8 @@ export async function updateSession(request) {
     return NextResponse.redirect(url);
   }
 
-  // Protect /admin — require admin role
+  // Protect /admin — require admin or dev role.
+  // /admin/usuarios is dev-only (assign/revoke admins).
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (!user) {
       const url = request.nextUrl.clone();
@@ -51,9 +52,19 @@ export async function updateSession(request) {
       .eq("id", user.id)
       .single();
 
-    if (profile?.role !== "admin") {
+    const role = profile?.role;
+    const isAdmin = role === "admin" || role === "dev";
+    const isDev = role === "dev";
+
+    if (!isAdmin) {
       const url = request.nextUrl.clone();
       url.pathname = "/";
+      return NextResponse.redirect(url);
+    }
+
+    if (request.nextUrl.pathname.startsWith("/admin/usuarios") && !isDev) {
+      const url = request.nextUrl.clone();
+      url.pathname = "/admin";
       return NextResponse.redirect(url);
     }
   }
