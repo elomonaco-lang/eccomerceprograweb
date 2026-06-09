@@ -30,8 +30,9 @@ export async function updateSession(request) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Protect /perfil — require any authenticated user
-  if (!user && request.nextUrl.pathname.startsWith("/perfil")) {
+  // Protect /perfil and /pedidos — require any authenticated user
+  const userOnlyPaths = ["/perfil", "/pedidos"];
+  if (!user && userOnlyPaths.some((p) => request.nextUrl.pathname.startsWith(p))) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
