@@ -362,6 +362,20 @@ export default function CheckoutPage() {
           </button>
         </form>
 
+        {submitting && paymentMethod === "mercadopago" && (
+          <div className={styles.mpOverlay} role="status" aria-live="polite">
+            <div className={styles.mpOverlayCard}>
+              <div className={styles.mpSpinner} aria-hidden="true" />
+              <h2 className={styles.mpOverlayTitle}>
+                Redirigiéndote a Mercado Pago…
+              </h2>
+              <p className={styles.mpOverlaySubtitle}>
+                Estamos generando tu pago seguro. No cierres esta ventana.
+              </p>
+            </div>
+          </div>
+        )}
+
         <aside className={styles.summary}>
           <h2 className={styles.summaryTitle}>Resumen de compra</h2>
           <ul className={styles.itemsList}>
