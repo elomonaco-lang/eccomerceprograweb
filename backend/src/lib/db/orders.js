@@ -94,7 +94,7 @@ function generateOrderCode() {
  * @param {number} input.total - total en la moneda base (entero)
  * @returns {Promise<{ orderId: string, persisted: boolean }>}
  */
-export async function createOrder({ customer, items, total }) {
+export async function createOrder({ customer, items, total, userId = null }) {
   const orderCode = generateOrderCode();
 
   // Si Supabase no esta configurado, devolvemos un orderId simulado
@@ -112,6 +112,7 @@ export async function createOrder({ customer, items, total }) {
     .from("orders")
     .insert({
       order_code: orderCode,
+      user_id: userId,
       customer_name: customer.name,
       customer_email: customer.email,
       customer_phone: customer.phone,

@@ -19,6 +19,23 @@ import {
   createPreference,
   isMercadoPagoConfigured,
 } from "@/lib/mercadopago";
+import { getSupabaseUserClient } from "@/lib/supabase/server";
+
+// Si viene un Authorization: Bearer <jwt>, intentamos extraer el user para
+// asociar la orden a él. Si no viene, queda como guest checkout (user_id null).
+async function getUserIdFromAuth(request) {
+  const auth = request.headers.get("authorization") || "";
+  const m = auth.match(/^Bearer\s+(.+)$/i);
+  if (!m) return null;
+  try {
+    const supabase = getSupabaseUserClient(m[1]);
+    if (!supabase) return null;
+    const { data: { user } } = await supabase.auth.getUser();
+    return user?.id || null;
+  } catch {
+    return null;
+  }
+}
 
 export async function OPTIONS(request) {
   return handleOptions(request);
@@ -75,10 +92,12 @@ export async function POST(request) {
         );
       }
     } else {
+      const userId = await getUserIdFromAuth(request);
       const created = await createOrder({
         customer,
         items: validatedItems,
         total,
+        userId,
       });
       orderCode = created.orderId;
     }

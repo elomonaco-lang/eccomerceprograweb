@@ -105,9 +105,11 @@ export default function CheckoutPage() {
       if (paymentMethod === "mercadopago") {
         // Crear preferencia en el backend y redirigir a Checkout Pro.
         // El backend ya crea la orden internamente; no llamamos a postOrder.
+        // Mandamos el accessToken para que la orden quede asociada al user.
         const { initPoint, sandboxInitPoint } = await createMpPreference({
           customer,
           items: cartItems,
+          accessToken,
         });
         clearCart();
         // En sandbox MP devuelve ambas URLs; preferimos sandbox si está.

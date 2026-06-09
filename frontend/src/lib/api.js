@@ -145,7 +145,7 @@ export async function postOrder({ customer, items, accessToken }) {
  * El backend revalida items/precios/stock contra la BD, así que lo que
  * mandamos acá es sólo el "intento" — la fuente de verdad es el server.
  */
-export async function createMpPreference({ customer, items, orderId }) {
+export async function createMpPreference({ customer, items, orderId, accessToken }) {
   if (!isApiConfigured()) {
     throw new Error("API no configurada — no se puede pagar con Mercado Pago.");
   }
@@ -154,7 +154,11 @@ export async function createMpPreference({ customer, items, orderId }) {
     `${API_URL}/api/payments/mercadopago/create-preference`,
     {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        // Si hay user logueado, mandamos su JWT para que la orden quede asociada.
+        ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {}),
+      },
       body: JSON.stringify({ customer, items, orderId }),
     }
   );
