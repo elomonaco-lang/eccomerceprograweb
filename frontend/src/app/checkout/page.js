@@ -151,47 +151,7 @@ export default function CheckoutPage() {
     );
   }
 
-  if (confirmed) {
-    return (
-      <div className="container">
-        <div className={styles.success}>
-          <div className={styles.successIcon} aria-hidden="true">
-            ✓
-          </div>
-          <h1>Pedido confirmado</h1>
-          <p className="text-muted">
-            Gracias por tu compra, <strong>{confirmed.name}</strong>. Te
-            enviamos un correo de confirmacion a{" "}
-            <strong>{confirmed.email}</strong>.
-          </p>
-          <div className={styles.orderInfo}>
-            <div>
-              <span className="text-muted">Numero de orden</span>
-              <strong>{confirmed.id}</strong>
-            </div>
-            <div>
-              <span className="text-muted">Productos</span>
-              <strong>{confirmed.items}</strong>
-            </div>
-            <div>
-              <span className="text-muted">Total</span>
-              <strong>{formatPrice(confirmed.total)}</strong>
-            </div>
-          </div>
-          <div className={styles.successActions}>
-            <Link href="/" className="btn btn-outline">
-              Volver al inicio
-            </Link>
-            <Link href="/productos" className="btn btn-accent">
-              Seguir comprando
-            </Link>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (items.length === 0) {
+  if (items.length === 0 && !confirmed) {
     return (
       <div className="container">
         <div className={styles.empty}>
@@ -395,6 +355,63 @@ export default function CheckoutPage() {
           </div>
         </aside>
       </div>
+
+      {confirmed && (
+        <div
+          className={styles.successModalBackdrop}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="success-title"
+          onClick={() => setConfirmed(null)}
+        >
+          <div
+            className={styles.successModal}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className={styles.successClose}
+              aria-label="Cerrar"
+              onClick={() => setConfirmed(null)}
+            >
+              ×
+            </button>
+            <div className={styles.successIcon} aria-hidden="true">
+              ✓
+            </div>
+            <h2 id="success-title" className={styles.successTitle}>
+              Pedido confirmado
+            </h2>
+            <p className={styles.successText}>
+              Gracias por tu compra, <strong>{confirmed.name}</strong>. Te
+              enviamos un correo de confirmación a{" "}
+              <strong>{confirmed.email}</strong>.
+            </p>
+            <div className={styles.orderInfo}>
+              <div>
+                <span className="text-muted">Número de orden</span>
+                <strong>{confirmed.id}</strong>
+              </div>
+              <div>
+                <span className="text-muted">Productos</span>
+                <strong>{confirmed.items}</strong>
+              </div>
+              <div>
+                <span className="text-muted">Total</span>
+                <strong>{formatPrice(confirmed.total)}</strong>
+              </div>
+            </div>
+            <div className={styles.successActions}>
+              <Link href="/" className="btn btn-outline">
+                Volver al inicio
+              </Link>
+              <Link href="/productos" className="btn btn-accent">
+                Seguir comprando
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
