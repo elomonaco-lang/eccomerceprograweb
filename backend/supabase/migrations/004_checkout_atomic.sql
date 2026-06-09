@@ -62,10 +62,14 @@ begin
     raise exception 'CUSTOMER_INVALID' using errcode = '22023';
   end if;
 
-  -- 4) Generar order_code (reintenta hasta 5 veces si choca)
+  -- 4) Generar order_code (reintenta hasta 5 veces si choca).
+  -- Calificamos public.orders.order_code via alias 'o' porque el OUT param
+  -- también se llama order_code y PG tira "column reference ambiguous".
   for i in 1..5 loop
     v_order_code := 'MT-' || lpad(floor(random() * 1000000)::text, 6, '0');
-    exit when not exists (select 1 from public.orders where order_code = v_order_code);
+    exit when not exists (
+      select 1 from public.orders o where o.order_code = v_order_code
+    );
   end loop;
 
   -- 5) Insertar orden con total = 0 (se actualiza al final)
@@ -91,8 +95,8 @@ begin
     -- FOR UPDATE serializa: si otro checkout corre en paralelo sobre el mismo
     -- producto, espera a que termine antes de leer el stock.
     select * into v_product
-    from public.products
-    where id = nullif(v_item->>'id','')::bigint
+    from public.products p
+    where p.id = nullif(v_item->>'id','')::bigint
     for update;
 
     if not found then
@@ -103,9 +107,9 @@ begin
       raise exception 'STOCK_INSUFFICIENT:%', v_product.name using errcode = '22023';
     end if;
 
-    update public.products
-       set stock = stock - v_qty
-     where id = v_product.id;
+    update public.products p
+       set stock = p.stock - v_qty
+     where p.id = v_product.id;
 
     insert into public.order_items (
       order_id, product_id, product_name, unit_price, quantity, subtotal
@@ -117,8 +121,10 @@ begin
     v_total := v_total + (v_product.price * v_qty);
   end loop;
 
-  -- 7) Actualizar total real de la orden
-  update public.orders set total = v_total where id = v_order_id;
+  -- 7) Actualizar total real de la orden.
+  -- Calificamos public.orders.total via alias 'o' porque OUT param también
+  -- se llama total y PG tiraría "column reference ambiguous".
+  update public.orders o set total = v_total where o.id = v_order_id;
 
   return query select v_order_code, v_order_id, v_total;
 end;
