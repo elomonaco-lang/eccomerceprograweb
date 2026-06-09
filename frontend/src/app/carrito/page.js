@@ -11,7 +11,7 @@ export default function CartPage() {
 
   if (!hydrated) {
     return (
-      <div className="container">
+      <div className={`container ${styles.page}`}>
         <h1>Carrito</h1>
         <p className="text-muted">Cargando carrito...</p>
       </div>
@@ -20,7 +20,7 @@ export default function CartPage() {
 
   if (items.length === 0) {
     return (
-      <div className="container">
+      <div className={`container ${styles.page}`}>
         <div className={styles.empty}>
           <h1>Tu carrito esta vacio</h1>
           <p className="text-muted">
@@ -35,7 +35,7 @@ export default function CartPage() {
   }
 
   return (
-    <div className="container">
+    <div className={`container ${styles.page}`}>
       <header className={styles.header}>
         <h1>Tu carrito</h1>
         <p className="text-muted">

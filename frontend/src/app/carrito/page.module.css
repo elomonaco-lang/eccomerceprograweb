@@ -1,3 +1,11 @@
+.page {
+  /* Asegurar que la página ocupe al menos la altura del viewport menos el
+     header, así el footer queda debajo del fold cuando el contenido es corto. */
+  min-height: calc(100vh - var(--header-height));
+  padding-top: 2rem;
+  padding-bottom: 3rem;
+}
+
 .header {
   margin-bottom: 1.5rem;
 }
