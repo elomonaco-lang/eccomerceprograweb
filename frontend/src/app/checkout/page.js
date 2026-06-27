@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/context/CartContext";
 import { useAuth } from "@/context/AuthContext";
@@ -9,6 +10,13 @@ import { createClient } from "@/lib/supabase/client";
 import { formatPrice } from "@/lib/format";
 import { postOrder, createMpPreference } from "@/lib/api";
 import styles from "./page.module.css";
+
+// El Brick de MP usa window.MercadoPago, requiere browser. Importamos con
+// dynamic + ssr:false para evitar errores de hidratación.
+const MercadoPagoBrick = dynamic(
+  () => import("./_components/MercadoPagoBrick"),
+  { ssr: false }
+);
 
 const initialForm = {
   name: "",
@@ -46,6 +54,11 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("mercadopago");
+
+  // Cuando el user clickea "Pagar con MP", validamos el form y montamos
+  // el Brick de MP en lugar de redirigir directo. El Brick crea la preference
+  // y muestra el botón que deep-linkea a la app MP si está instalada.
+  const [mpBrickActive, setMpBrickActive] = useState(false);
 
   function handleChange(e) {
     const { name, value } = e.target;
@@ -103,17 +116,11 @@ export default function CheckoutPage() {
       }
 
       if (paymentMethod === "mercadopago") {
-        // Crear preferencia en el backend y redirigir a Checkout Pro.
-        // El backend ya crea la orden internamente; no llamamos a postOrder.
-        // Mandamos el accessToken para que la orden quede asociada al user.
-        const { initPoint, sandboxInitPoint } = await createMpPreference({
-          customer,
-          items: cartItems,
-          accessToken,
-        });
-        clearCart();
-        // En sandbox MP devuelve ambas URLs; preferimos sandbox si está.
-        window.location.href = sandboxInitPoint || initPoint;
+        // En lugar de redirect directo, activamos el Brick Wallet.
+        // El Brick crea la preference y renderiza el botón MP oficial que
+        // deep-linkea a la app si está instalada (mejor UX mobile).
+        setMpBrickActive(true);
+        setSubmitting(false);
         return;
       }
 
@@ -310,33 +317,71 @@ export default function CheckoutPage() {
             </p>
           )}
 
-          <button
-            type="submit"
-            className="btn btn-accent btn-block"
-            style={{ marginTop: "0.5rem" }}
-            disabled={submitting}
-          >
-            {submitting
-              ? "Procesando..."
-              : paymentMethod === "mercadopago"
-                ? "Pagar con Mercado Pago"
-                : "Confirmar pedido"}
-          </button>
+          {!mpBrickActive && (
+            <button
+              type="submit"
+              className="btn btn-accent btn-block"
+              style={{ marginTop: "0.5rem" }}
+              disabled={submitting}
+            >
+              {submitting
+                ? "Procesando..."
+                : paymentMethod === "mercadopago"
+                  ? "Pagar con Mercado Pago"
+                  : "Confirmar pedido"}
+            </button>
+          )}
+
+          {mpBrickActive && (
+            <div className={styles.brickContainer}>
+              <p className={styles.brickHint}>
+                Pulsá el botón abajo. Si tenés la app de Mercado Pago instalada,
+                se abrirá automáticamente.
+              </p>
+              <MercadoPagoBrick
+                createPreference={async () => {
+                  const supabase = createClient();
+                  const { data: { session } } = await supabase.auth.getSession();
+                  const accessToken = session?.access_token;
+                  const res = await createMpPreference({
+                    customer: {
+                      name: form.name,
+                      email: form.email,
+                      phone: form.phone,
+                      address: form.address,
+                      comments: form.comments,
+                    },
+                    items: items.map((it) => ({
+                      id: it.id,
+                      name: it.name,
+                      price: it.price,
+                      quantity: it.quantity,
+                    })),
+                    accessToken,
+                  });
+                  return { preferenceId: res.preferenceId, orderId: res.orderId };
+                }}
+                onSubmit={() => {
+                  // El Brick va a redirigir / abrir la app; vaciamos el carrito.
+                  clearCart();
+                }}
+                onError={(err) => {
+                  setSubmitError(err?.message || "Error en el botón de Mercado Pago.");
+                  setMpBrickActive(false);
+                }}
+              />
+              <button
+                type="button"
+                className="btn btn-outline btn-block"
+                style={{ marginTop: "0.75rem" }}
+                onClick={() => setMpBrickActive(false)}
+              >
+                ← Cancelar y elegir otro medio de pago
+              </button>
+            </div>
+          )}
         </form>
 
-        {submitting && paymentMethod === "mercadopago" && (
-          <div className={styles.mpOverlay} role="status" aria-live="polite">
-            <div className={styles.mpOverlayCard}>
-              <div className={styles.mpSpinner} aria-hidden="true" />
-              <h2 className={styles.mpOverlayTitle}>
-                Redirigiéndote a Mercado Pago…
-              </h2>
-              <p className={styles.mpOverlaySubtitle}>
-                Estamos generando tu pago seguro. No cierres esta ventana.
-              </p>
-            </div>
-          </div>
-        )}
 
         <aside className={styles.summary}>
           <h2 className={styles.summaryTitle}>Resumen de compra</h2>
