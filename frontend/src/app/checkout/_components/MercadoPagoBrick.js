@@ -1,3 +1,5 @@
+// Componente Wallet Brick de MP — deep-linkea a la app si está instalada.
+// v2: forzar rebuild sin cache.
 "use client";
 
 import { useEffect, useState } from "react";

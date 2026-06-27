@@ -13,9 +13,11 @@ import styles from "./page.module.css";
 
 // El Brick de MP usa window.MercadoPago, requiere browser. Importamos con
 // dynamic + ssr:false para evitar errores de hidratación.
+// v2: forzar webpack a re-incluir este chunk (el cache de Vercel se quedó
+// con el bundle viejo sin el Brick).
 const MercadoPagoBrick = dynamic(
   () => import("./_components/MercadoPagoBrick"),
-  { ssr: false }
+  { ssr: false, loading: () => <div>Cargando botón…</div> }
 );
 
 const initialForm = {
