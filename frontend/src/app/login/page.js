@@ -1,17 +1,41 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
 import { useAuth } from "@/context/AuthContext";
 import styles from "./page.module.css";
 
+// Traduce los mensajes de error de Supabase a algo legible en español.
+function traducirError(message) {
+  if (!message) return "Ocurrió un error. Intentá de nuevo.";
+  const m = message.toLowerCase();
+  if (m.includes("invalid login credentials"))
+    return "Email o contraseña incorrectos.";
+  if (m.includes("email not confirmed"))
+    return "Confirmá tu email antes de ingresar. Revisá tu correo.";
+  if (m.includes("user already registered") || m.includes("already been registered"))
+    return "Ya existe una cuenta con ese email. Probá iniciar sesión.";
+  if (m.includes("password should be at least"))
+    return "La contraseña debe tener al menos 6 caracteres.";
+  if (m.includes("unable to validate email") || m.includes("invalid email"))
+    return "El email no es válido.";
+  return message;
+}
+
 function LoginContent() {
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  const [mode, setMode] = useState("login"); // "login" | "signup"
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [info, setInfo] = useState("");
   const supabase = createClient();
 
   useEffect(() => {
@@ -24,9 +48,16 @@ function LoginContent() {
     }
   }, [searchParams]);
 
+  function switchMode(next) {
+    setMode(next);
+    setError("");
+    setInfo("");
+  }
+
   async function handleGoogleLogin() {
     setLoading(true);
     setError("");
+    setInfo("");
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
@@ -34,8 +65,52 @@ function LoginContent() {
       },
     });
     if (error) {
-      setError(error.message);
+      setError(traducirError(error.message));
       setLoading(false);
+    }
+  }
+
+  async function handleEmailSubmit(e) {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setInfo("");
+
+    if (mode === "login") {
+      const { error } = await supabase.auth.signInWithPassword({
+        email: email.trim(),
+        password,
+      });
+      if (error) {
+        setError(traducirError(error.message));
+        setLoading(false);
+        return;
+      }
+      // El listener de AuthContext + el useEffect de arriba redirigen a "/".
+      router.replace("/");
+    } else {
+      const { data, error } = await supabase.auth.signUp({
+        email: email.trim(),
+        password,
+        options: {
+          data: { full_name: name.trim() || undefined },
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+      if (error) {
+        setError(traducirError(error.message));
+        setLoading(false);
+        return;
+      }
+      // Si el proyecto exige confirmación de email, no hay sesión todavía.
+      if (!data.session) {
+        setInfo(
+          "Te enviamos un correo para confirmar tu cuenta. Revisá tu bandeja (y el spam) para terminar el registro."
+        );
+        setLoading(false);
+        return;
+      }
+      router.replace("/");
     }
   }
 
@@ -55,12 +130,17 @@ function LoginContent() {
           <span className={styles.brandName}>MusicTrack</span>
         </div>
 
-        <h1 className={styles.title}>Bienvenido</h1>
+        <h1 className={styles.title}>
+          {mode === "login" ? "Bienvenido" : "Creá tu cuenta"}
+        </h1>
         <p className={styles.subtitle}>
-          Iniciá sesión para guardar tu carrito y gestionar tus pedidos.
+          {mode === "login"
+            ? "Iniciá sesión para guardar tu carrito y gestionar tus pedidos."
+            : "Registrate para guardar tu carrito y seguir tus pedidos."}
         </p>
 
         {error && <p className={styles.error}>{error}</p>}
+        {info && <p className={styles.info}>{info}</p>}
 
         <button
           onClick={handleGoogleLogin}
@@ -91,8 +171,95 @@ function LoginContent() {
               />
             </svg>
           )}
-          {loading ? "Redirigiendo..." : "Continuar con Google"}
+          {loading ? "Procesando..." : "Continuar con Google"}
         </button>
+
+        <div className={styles.divider}>
+          <span>o</span>
+        </div>
+
+        <form className={styles.form} onSubmit={handleEmailSubmit}>
+          {mode === "signup" && (
+            <label className={styles.field}>
+              <span className={styles.label}>Nombre</span>
+              <input
+                type="text"
+                className={styles.input}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Tu nombre"
+                autoComplete="name"
+              />
+            </label>
+          )}
+
+          <label className={styles.field}>
+            <span className={styles.label}>Email</span>
+            <input
+              type="email"
+              className={styles.input}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="tu@email.com"
+              autoComplete="email"
+              required
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.label}>Contraseña</span>
+            <input
+              type="password"
+              className={styles.input}
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder={mode === "signup" ? "Mínimo 6 caracteres" : "••••••••"}
+              autoComplete={mode === "login" ? "current-password" : "new-password"}
+              minLength={6}
+              required
+            />
+          </label>
+
+          {mode === "login" && (
+            <Link href="/auth/recuperar" className={styles.forgotLink}>
+              ¿Olvidaste tu contraseña?
+            </Link>
+          )}
+
+          <button type="submit" disabled={loading} className={styles.primaryBtn}>
+            {loading
+              ? "Procesando..."
+              : mode === "login"
+                ? "Ingresar"
+                : "Crear cuenta"}
+          </button>
+        </form>
+
+        <p className={styles.switch}>
+          {mode === "login" ? (
+            <>
+              ¿No tenés cuenta?{" "}
+              <button
+                type="button"
+                className={styles.switchBtn}
+                onClick={() => switchMode("signup")}
+              >
+                Registrate
+              </button>
+            </>
+          ) : (
+            <>
+              ¿Ya tenés cuenta?{" "}
+              <button
+                type="button"
+                className={styles.switchBtn}
+                onClick={() => switchMode("login")}
+              >
+                Iniciá sesión
+              </button>
+            </>
+          )}
+        </p>
 
         <p className={styles.legal}>
           Al continuar, aceptás los términos y condiciones del sitio.
